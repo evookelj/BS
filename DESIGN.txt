@@ -1,0 +1,50 @@
+B.S by Emma Vukelj and Grace Stempel
+
+We plan to recreate the popular card game known as B.S (also known as 'Cheat'
+or 'I Doubt It' according to Wikipedia) in C. Our version of this game will be
+networked and in-terminal (using text/maybe ASCII art). Players will also be
+able to have profiles with usernames, passwords, and statistics, so that they
+and their friends can keep track of their games and progress long-term, but
+players will not need a profile to play.
+
+This project will incorporate:
+	- memory allocation: because, it's hard to write a C file that doesn't
+	- writing and getting info from files: for accessing and updating
+		the playing stats of each user (e.g win/loss ratio, how
+		often they 'B.S', etc)
+	- signals: Error handling
+	- pipes: Will be used to communicate the information of each turn
+		across the different audiences (which players and files
+		should know what)
+	- shared memory and semaphores: Regulate whose turn it is, or who can
+	  	 access the deck at any given time. Send “B.S” signals if the
+		 player suspects
+		the player whose turn it is has lied.
+	- networking: Will be used to allow players on different computers
+		to play in the same games
+
+Project Components/Responsibility Breakdown:
+	- Modular (human+CPU use these) basic gameplay functionality: Grace
+	- Basic gameplay functionality for human users: Grace
+	- Basic gameplay functionality for CPUs: Emma
+	- Player profile creation and maintenance: Emma
+	- Networking across computers: Grace & Emma
+
+Data Structures to be used:
+	- Struct card { String type; int value; }
+	- Struct player { String type; String name; card* cards; }
+		-- type=human OR type=CPU
+	- player* of players (in order)
+	- card* played: cards put down on table
+
+Algorithms to be used:
+	- Basic shuffling of cards using random numbers to re-order
+	- Server handshake algorithm for networking
+	- BubbleSort to sort the cards in each player's deck (for player to
+	  see only)
+
+Timeline:
+	- 1/13: Finish basic gameplay functionality
+	- 1/18: Finish user profile handling
+	- 1/23: Finish networking capabilities
+	- Use remaining time to fix small quirks and add polishing touches
