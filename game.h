@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "profile.h"
+
 struct card_struct {
   char* type; //"heart", "diamond", "club", or "spade"
   short value; //A=1 b/c value doesn't rlly matter for BS
@@ -25,7 +27,7 @@ typedef struct player_struct player;
 int run_game();
 
 //Runs opeing sequence for game
-profile* opening();
+void opening();
 
 //single player starts the game
 //waits for all intended players to connect

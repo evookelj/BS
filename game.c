@@ -1,12 +1,11 @@
 #include "game.h"
-#include "profile.h"
 
 int run_game() {
   opening();
   return -1;
 }
 
-profile* opening() {
+void opening() {
   int validInput = 1; //1 means invalid user input, 0 means valid user input so move on
   char* s;
   char input[128];
