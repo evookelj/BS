@@ -3,6 +3,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+struct card_struct {
+  char* type; //"heart", "diamond", "club", or "spade"
+  short value; //A=1 b/c value doesn't rlly matter for BS
+};
+
+typedef struct card_struct card;
 
 struct player_struct {
   unsigned short type; //0=CPU, 1=HUMAN
@@ -12,16 +20,16 @@ struct player_struct {
 
 typedef struct player_struct player;
 
-struct card_struct {
-  char* type; //"heart", "diamond", "club", or "spade"
-  short value; //A=1 b/c value doesn't rlly matter for BS
-};
-
-typedef struct card_struct card;
-
 //overall function to run the game
 //returns 0 if game completed, -1 if game is cut short
 int run_game();
+
+//Runs opeing sequence for game
+profile* opening();
+
+//single player starts the game
+//waits for all intended players to connect
+void start_game();
 
 //deals cards at start of game
 //returns number of cards per player
@@ -53,6 +61,6 @@ int accuse(player accuser);
 
 //give player giveTo these cards
 //used when wrong accuser acquires discard pile
-void give_cards(player giveTo, card* cards)
+void give_cards(player giveTo, card* cards);
 
 #endif

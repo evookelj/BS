@@ -7,7 +7,9 @@ struct profileStruct {
   int totalClaims;
   int wins;
   int losses;
-}
+};
+
+typedef struct profileStruct profile;
 
 //returns "" upon success, error msg upon failure
 //creates hidden struct file in .profiles for each player profile
