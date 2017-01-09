@@ -1,12 +1,11 @@
 #include "game.h"
-#include "profile.h"
 
 int run_game() {
   opening();
   return -1;
 }
 
-profile* opening() {
+void opening() {
   int validInput = 1; //1 means invalid user input, 0 means valid user input so move on
   char* s;
   char input[128];
@@ -15,7 +14,7 @@ profile* opening() {
   printf("%s", s);
   fgets(input, sizeof(input), stdin);
   while(validInput) {
-    if (strncmp(input, "Y", 1) == 0) {
+    if (toupper(input[0]) == 'Y') {
       validInput = 0;
       s = "Username: ";
       printf("%s", s);
@@ -25,7 +24,7 @@ profile* opening() {
       printf("%s", s);
       fgets(input, sizeof(input), stdin);
     }
-    else if(strncmp(input, "N", 1) == 0) {
+    else if(toupper(input[0]) == 'N') {
       validInput = 0;
       s = "Please login\nUsername: ";
       printf("%s", s);
