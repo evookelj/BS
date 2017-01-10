@@ -30,6 +30,7 @@ char* create_profile(char* name) {
       return "Account creation failed. Try again";
     }
   }
+  free(loc);
   close(fd);
 
   return "";
@@ -50,6 +51,7 @@ profile* get_profile(char* name) {
   //created for some reason
   printf("name: %s", this->name);
   close(fd);
+  free(loc);
   return this;
 }
 
@@ -58,6 +60,7 @@ char* display_profile(char* name) {
   char* ret = malloc(sizeof(1, 10000));
   sprintf(ret, "Name: %s\nLies: %d\nTotal Claims: %d\nWins: %d\nLosses: %d\n\n",
 	  this->name, this->lies, this->total_claims, this->wins, this->losses);
+  free(this);
   return ret;
 }
 
