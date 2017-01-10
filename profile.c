@@ -1,6 +1,6 @@
 #include "profile.h"
 
-char* fileLocation(char* name) {
+char* file_location(char* name) {
   char* str = malloc(sizeof(char*));
   sprintf(str, ".profiles/.%s",name);
   return str;
@@ -14,28 +14,55 @@ char* create_profile(char* name) {
   }
 
   profile* new = malloc(sizeof(profile));
-  new->name = "hey";
-  printf("name: %s\n", new->name);
+  new->name = name;
   new->lies = 0;
-  new->totalClaims = 0;
+  new->total_claims = 0;
   new->wins = 0;
   new->losses = 0;
 
-  char* loc = fileLocation(name);
-  int fd = open(loc, O_WRONLY | O_CREAT | O_EXCL);
+  char* loc = file_location(name);
+  int fd = open(loc, O_WRONLY | O_CREAT | O_EXCL, 0644);
   if (fd<0) {
     return "Username already exists.";
   } else {
     int wr = write(fd, new, sizeof(profile));
     if (wr<0) {
-      return "Account creation failed.";
+      return "Account creation failed. Try again";
     }
   }
 
   return "";
 }
 
+profile* get_profile(char* name) {
+  char* loc = file_location(name);
+  profile* this = malloc(sizeof(profile));
+  int fd = open(loc, O_RDONLY, 0644);
+  if (fd<0) {
+    return NULL;
+  }
+  int rd = read(fd, this, sizeof(profile));
+  if (rd<0) {
+    return NULL;
+  }
+  //below causes error when account wasn't just
+  //created for some reason
+  printf("name: %s", this->name);
+  return this;
+}
+
+char* display_profile(char* name) {
+  profile* this = get_profile(name);
+  char* ret = malloc(sizeof(1, 10000));
+  sprintf(ret, "Name: %s\nLies: %d\nTotal Claims: %d\nWins: %d\nLosses: %d\n\n",
+	  this->name, this->lies, this->total_claims, this->wins, this->losses);
+  return ret;
+}
+
 int main() {
-  printf("%s\n", create_profile("emmavook"));
+  char* usr = "emmavook";
+  printf("%s\n", create_profile(usr));
+  printf("%s\n",display_profile(usr));
+  
   return 0;
 }
