@@ -1,6 +1,6 @@
 #include "profile.h"
 
-char* file_location(char* name) {
+char* file_location(char name[30]) {
   char* str = malloc(sizeof(char*));
   sprintf(str, ".profiles/.%s",name);
   return str;
@@ -14,7 +14,7 @@ char* create_profile(char* name) {
   }
 
   profile new;
-  strncpy(new.name,name, sizeof(new.name)-1);
+  strncpy(new.name, name, 29);
   new.lies = 0;
   new.total_claims = 0;
   new.wins = 0;
@@ -36,25 +36,25 @@ char* create_profile(char* name) {
   return "";
 }
 
-profile* get_profile(char* name) {
+profile* get_profile(char name[30]) {
   char* loc = file_location(name);
-  profile* this = malloc(sizeof(profile));
+  profile this;// = malloc(sizeof(profile));
   int fd = open(loc, O_RDONLY, 0644);
   if (fd<0) {
     return NULL;
   }
-  int rd = read(fd, this, sizeof(profile));
+  int rd = read(fd, &this, sizeof(profile));
   if (rd<0) {
     return NULL;
   }
   //below causes error when account wasn't just
   //created for some reason
-  printf("name: %d\n", this->name);
+  printf("name: %s\n", this.name);
   close(fd);
-  return this;
+  return &this;
 }
 
-char* display_profile(char* name) {
+char* display_profile(char name[30]) {
   profile* this = get_profile(name);
   char* ret = malloc(sizeof(1, 10000));
   sprintf(ret, "Name: %d\nLies: %d\nTotal Claims: %d\nWins: %d\nLosses: %d\n\n",
