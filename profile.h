@@ -1,6 +1,14 @@
 #ifndef PROFILEHEADER_H
 #define PROFILEHEADER_H
 
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
 struct profileStruct {
   char* name;
   int lies;
@@ -10,6 +18,10 @@ struct profileStruct {
 };
 
 typedef struct profileStruct profile;
+
+//helper function to take username and sprintf it
+//into correct format to find hidden file holding struct
+char* fileLocation(char* name);
 
 //returns "" upon success, error msg upon failure
 //creates hidden struct file in .profiles for each player profile
