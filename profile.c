@@ -30,6 +30,7 @@ char* create_profile(char* name) {
       return "Account creation failed. Try again";
     }
   }
+  close(fd);
 
   return "";
 }
@@ -48,6 +49,7 @@ profile* get_profile(char* name) {
   //below causes error when account wasn't just
   //created for some reason
   printf("name: %s", this->name);
+  close(fd);
   return this;
 }
 
