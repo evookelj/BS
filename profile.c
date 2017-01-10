@@ -13,24 +13,24 @@ char* create_profile(char* name) {
     return "Username must be from 6-30 characters";
   }
 
-  profile* new = malloc(sizeof(profile));
-  new->name = name;
-  new->lies = 0;
-  new->total_claims = 0;
-  new->wins = 0;
-  new->losses = 0;
+  profile new;
+  strncpy(new.name,name, sizeof(new.name)-1);
+  new.lies = 0;
+  new.total_claims = 0;
+  new.wins = 0;
+  new.losses = 0;
 
   char* loc = file_location(name);
   int fd = open(loc, O_WRONLY | O_CREAT | O_EXCL, 0644);
   if (fd<0) {
     return "Username already exists.";
   } else {
-    int wr = write(fd, new, sizeof(profile));
+    int wr = write(fd, &new, sizeof(profile));
     if (wr<0) {
       return "Account creation failed. Try again";
     }
   }
-  free(loc);
+
   close(fd);
 
   return "";
@@ -49,16 +49,15 @@ profile* get_profile(char* name) {
   }
   //below causes error when account wasn't just
   //created for some reason
-  printf("name: %s", this->name);
+  printf("name: %d\n", this->name);
   close(fd);
-  free(loc);
   return this;
 }
 
 char* display_profile(char* name) {
   profile* this = get_profile(name);
   char* ret = malloc(sizeof(1, 10000));
-  sprintf(ret, "Name: %s\nLies: %d\nTotal Claims: %d\nWins: %d\nLosses: %d\n\n",
+  sprintf(ret, "Name: %d\nLies: %d\nTotal Claims: %d\nWins: %d\nLosses: %d\n\n",
 	  this->name, this->lies, this->total_claims, this->wins, this->losses);
   free(this);
   return ret;
