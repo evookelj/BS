@@ -21,11 +21,27 @@ char* create_profile(char* name) {
   new.losses = 0;
 
   char* loc = file_location(name);
-  int fd = open(loc, O_WRONLY | O_CREAT | O_EXCL, 0644);
+  int fd = open(loc, O_WRONLY | O_CREAT | O_EXCL | O_APPEND, 0644);
   if (fd<0) {
     return "Username already exists.";
   } else {
-    int wr = write(fd, &new, sizeof(profile));
+    int wr = write(fd, &(new.name), 30);
+    if (wr<0) {
+      return "Account creation failed. Try again";
+    }
+    wr = write(fd, &(new.lies), sizeof(int));
+    if (wr<0) {
+      return "Account creation failed. Try again";
+    }
+    wr = write(fd, &(new.total_claims), sizeof(int));
+    if (wr<0) {
+      return "Account creation failed. Try again";
+    }
+    wr = write(fd, &(new.wins), sizeof(int));
+    if (wr<0) {
+      return "Account creation failed. Try again";
+    }
+    wr = write(fd, &(new.losses), sizeof(int));
     if (wr<0) {
       return "Account creation failed. Try again";
     }
@@ -43,13 +59,31 @@ profile* get_profile(char* name) {
   if (fd<0) {
     return NULL;
   }
-  int rd = read(fd, this, sizeof(profile));
+  int rd;
+  rd = read(fd, &(this->name), 30);
+  if (rd<0) {
+    return NULL;
+  }
+  this->name[30] = '\0';
+  rd = read(fd, &(this->lies), sizeof(int));
+  if (rd<0) {
+    return NULL;
+  }
+  rd = read(fd, &(this->total_claims), sizeof(int));
+  if (rd<0) {
+    return NULL;
+  }
+  rd = read(fd, &(this->wins), sizeof(int));
+  if (rd<0) {
+    return NULL;
+  }
+  rd = read(fd, &(this->losses), sizeof(int));
   if (rd<0) {
     return NULL;
   }
   //below causes error when account wasn't just
   //created for some reason
-  printf("name: %d\n", this->name);
+  printf("name: %d\nn", this->name);
   close(fd);
   return this;
 }

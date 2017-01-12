@@ -1,5 +1,6 @@
 #include "human_playing.h"
 
+/*
 char* getFitting(player* thisPlayer, short currValue) {
   int i;
   while (thisPlayer->hand[i]) {
@@ -11,6 +12,7 @@ char* getFitting(player* thisPlayer, short currValue) {
   }
   return ":O";
 }
+
 
 int run_human_turn(player* thisPlayer, short currValue) {
   char snum[3];
@@ -24,19 +26,26 @@ int run_human_turn(player* thisPlayer, short currValue) {
   
   return 0;
 }
-
+*/
 int main() {
   //ISSUE WITH CARD ADDING THAT I DONT HAVE
   //TIME TO FIX
   player* emma;
   int i;
+  printf("GETTING THIS FAR\n");
   for (i=0; i<5; i++) {
-    strcpy( emma->hand[i]->type, "heart");
-    emma->hand[i]->value = i;
+    printf("GETTING THIS FAR\n");
+    printf("What type?: %s\n", emma->hand[i].type);
+    strcpy( emma->hand[i].type, "heart");
+    printf("GETTING THIS FAR\n");
+    emma->hand[i].value = i;
   }
-  for (i=5; i++; i<17) {
-    emma->hand[i] = NULL;
+  printf("GETTING THIS FAR\n");
+  /*
+  for (i=5; i<17; i++) {
+    emma->hand[i] = *NULL;
   }
+  */
   run_human_turn(emma, 1);
   return 0;
 }
