@@ -28,9 +28,9 @@ int run_game() {
 }
 
 void start_game() {
-  create struct
-  add players
-  deal hands
+  //create struct
+  //add players
+  //deal hands
 }
 
 int run_turn(player thisPlayer) {
@@ -43,6 +43,7 @@ int deal_cards() {
 }
 
 int get_players() {
+  return -1;
 }
 
 player* get_humans() {
