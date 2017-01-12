@@ -1,7 +1,8 @@
 #include "game.h"
 
 int run_game() {
-  opening();
+  //opening(); commenting out so i can just test game play
+  
   return -1;
 }
 
@@ -45,7 +46,6 @@ void opening() {
 }
 
 void start_game() {
-
 }
 
 int deal_cards() {
@@ -53,7 +53,6 @@ int deal_cards() {
 }
 
 int get_players() {
-  return -1;
 }
 
 player* get_humans() {
@@ -61,16 +60,34 @@ player* get_humans() {
   return new;
 }
 
-int run_turn(player thisPlayer) {
-  return -1;
+int run_turn(player thisPlayer, short currValue) {
+  int ret;
+  if (thisPlayer->type) {
+    ret = run_human_turn(thisPlayer, currValue);
+  } else {
+    ret = run_cpu_turn(thisPlayer, currValue);
+  }
+  return ret;
 }
 
-int cars_and_claim(player thisPlayer) {
-  return -1;
+int cards_and_claim(player thisPlayer) {
+  int ret;
+  if (thisPlayer->type) {
+    ret = human_cards_and_claim(thisPlayer);
+  } else {
+    ret = cpu_cards_and_claim(thisPlayer);
+  }
+  return ret;
 }
 
 int accuse(player accuser) {
-  return -1;
+  int ret;
+  if (accuser->type) {
+    ret = human_accuse(accuser);
+  } else {
+    ret = cpu_accuse(accuser);
+  }
+  return ret;
 }
 
 void give_cards(player giveTo, card* cards) {

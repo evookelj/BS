@@ -3,7 +3,7 @@
 
 #include "game.h"
 
-int run_human_turn(player thisPlayer);
+int run_human_turn(player thisPlayer, short currValue);
 
 int human_cards_and_claim(player thisPlayer);
 
