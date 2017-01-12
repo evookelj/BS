@@ -14,7 +14,6 @@ char* create_profile(char* name) {
   }
 
   profile new;
-  strncpy(new.name,name, sizeof(new.name)-1);
   new.lies = 0;
   new.total_claims = 0;
   new.wins = 0;
@@ -25,11 +24,7 @@ char* create_profile(char* name) {
   if (fd<0) {
     return "Username already exists.";
   } else {
-    int wr = write(fd, &(new.name), 30);
-    if (wr<0) {
-      return "Account creation failed. Try again";
-    }
-    wr = write(fd, &(new.lies), sizeof(int));
+    int wr = write(fd, &(new.lies), sizeof(int));
     if (wr<0) {
       return "Account creation failed. Try again";
     }
@@ -60,11 +55,6 @@ profile* get_profile(char* name) {
     return NULL;
   }
   int rd;
-  rd = read(fd, &(this->name), 30);
-  if (rd<0) {
-    return NULL;
-  }
-  this->name[30] = '\0';
   rd = read(fd, &(this->lies), sizeof(int));
   if (rd<0) {
     return NULL;
@@ -81,9 +71,6 @@ profile* get_profile(char* name) {
   if (rd<0) {
     return NULL;
   }
-  //below causes error when account wasn't just
-  //created for some reason
-  printf("name: %d\nn", this->name);
   close(fd);
   return this;
 }
@@ -91,8 +78,8 @@ profile* get_profile(char* name) {
 char* display_profile(char* name) {
   profile* this = get_profile(name);
   char* ret = malloc(sizeof(1, 10000));
-  sprintf(ret, "Name: %d\nLies: %d\nTotal Claims: %d\nWins: %d\nLosses: %d\n\n",
-	  this->name, this->lies, this->total_claims, this->wins, this->losses);
+  sprintf(ret, "Lies: %d\nTotal Claims: %d\nWins: %d\nLosses: %d\n\n",
+	  this->lies, this->total_claims, this->wins, this->losses);
   free(this);
   return ret;
 }

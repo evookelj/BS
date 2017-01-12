@@ -10,7 +10,6 @@
 #include <sys/stat.h>
 
 struct profileStruct {
-  char* name;
   int lies;
   int total_claims;
   int wins;

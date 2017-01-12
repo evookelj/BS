@@ -1,4 +1,21 @@
 #include "game.h"
+#include "networking.h"
+
+void sub_server( int sd ) {
+  char buffer[MESSAGE_BUFFER_SIZE];
+  while (read( sd, buffer, sizeof(buffer) )) {
+    printf("[SERVER %d] received: %s\n", getpid(), buffer );
+    process( buffer );
+    write( sd, buffer, sizeof(buffer));    
+  }
+}
+
+void process( char * s ) {
+  while ( *s ) {
+    *s = (*s - 'a' + 13) % 26 + 'a';
+    s++;
+  }
+}
 
 int run_game() {
   //opening(); commenting out so i can just test game play
@@ -103,6 +120,18 @@ void give_cards(player giveTo, card* cards) {
 }
 
 int main() {
-  run_game();
-  return 1;
+  int sd, connection;
+  sd = server_setup(); 
+  while (1) {
+    connection = server_connect( sd );
+    int f = fork();
+    if ( f == 0 ) {
+      close(sd);
+      sub_server( connection );
+      exit(0);
+    } else {
+      close( connection );
+    }
+  }
+  return 0;
 }

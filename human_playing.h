@@ -1,7 +1,7 @@
 #ifndef HUMANHEADER_H
 #define HUMANHEADER_H
 
-#include "game.h"
+#include "server.h"
 
 //str listing of cards player has that fit current value
 //so they know what options are upon turn

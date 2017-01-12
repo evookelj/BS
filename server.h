@@ -9,13 +9,6 @@
 #include "profile.h"
 
 //=====================STRUCTS=====================
-struct game_struct {
-  player* players;
-  card* pile;
-};
-
-typedef game_struct game;
-
 struct card_struct {
   char* type; //"heart", "diamond", "club", or "spade"
   short value; //A=1 b/c value doesn't rlly matter for BS
@@ -30,6 +23,13 @@ struct player_struct {
 };
 
 typedef struct player_struct player;
+
+struct game_struct {
+  player* players;
+  card* pile;
+};
+
+typedef struct game_struct game;
 //=====================STRUCTS=====================
 
 //overall function to run the game
