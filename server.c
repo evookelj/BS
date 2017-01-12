@@ -1,5 +1,7 @@
-#include "game.h"
-#include "networking.h"
+#include "server.h"
+
+void process( char * s );
+void sub_server( int sd );
 
 void sub_server( int sd ) {
   char buffer[MESSAGE_BUFFER_SIZE];
@@ -30,6 +32,7 @@ void start_game() {
   */
 }
 
+/*
 int run_turn(player thisPlayer) {
   //send msg to corr player that its their turn
   //update msgs to other players
@@ -47,7 +50,7 @@ player* get_humans() {
   return new;
 }
 
-int run_turn(player thisPlayer, short currValue) {
+int run_turn(player* thisPlayer, short currValue) {
   int ret;
   if (thisPlayer->type) {
     ret = run_human_turn(thisPlayer, currValue);
@@ -57,7 +60,7 @@ int run_turn(player thisPlayer, short currValue) {
   return ret;
 }
 
-int cards_and_claim(player thisPlayer) {
+int cards_and_claim(player* thisPlayer) {
   int ret;
   if (thisPlayer->type) {
     ret = human_cards_and_claim(thisPlayer);
@@ -67,7 +70,7 @@ int cards_and_claim(player thisPlayer) {
   return ret;
 }
 
-int accuse(player accuser) {
+int accuse(player* accuser) {
   int ret;
   if (accuser->type) {
     ret = human_accuse(accuser);
@@ -77,7 +80,7 @@ int accuse(player accuser) {
   return ret;
 }
 
-void give_cards(player giveTo, card* cards) {
+void give_cards(player* giveTo, card* cards) {
 }
 
  void opening() {
@@ -117,7 +120,7 @@ void give_cards(player giveTo, card* cards) {
 
   s = "Do you need a refresher of the rules?(Y/N): ";
   //start_game();
-}
+  }*/
 
 int main() {
   int sd, connection;

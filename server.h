@@ -7,6 +7,7 @@
 #include <ctype.h>
 
 #include "profile.h"
+#include "networking.h"
 
 //=====================STRUCTS=====================
 struct card_struct {
