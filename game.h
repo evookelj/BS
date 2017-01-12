@@ -8,6 +8,14 @@
 
 #include "profile.h"
 
+//=====================STRUCTS=====================
+struct game_struct {
+  player* players;
+  card* pile;
+};
+
+typedef game_struct game;
+
 struct card_struct {
   char* type; //"heart", "diamond", "club", or "spade"
   short value; //A=1 b/c value doesn't rlly matter for BS
@@ -22,6 +30,7 @@ struct player_struct {
 };
 
 typedef struct player_struct player;
+//=====================STRUCTS=====================
 
 //overall function to run the game
 //returns 0 if game completed, -1 if game is cut short
