@@ -19,6 +19,8 @@ void process( char * s ) {
   }
 }
 
+/*
+
 int run_game() {
   //opening(); commenting out so i can just test game play
   
@@ -26,13 +28,11 @@ int run_game() {
 }
 
 void start_game() {
-  /*create struct
+  create struct
   add players
   deal hands
-  */
 }
 
-/*
 int run_turn(player thisPlayer) {
   //send msg to corr player that its their turn
   //update msgs to other players
