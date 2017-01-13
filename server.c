@@ -32,6 +32,7 @@ int main() {
     if (connects>=3) {
       printf("Is this everyone?\n");
       int invalidInput = 1;
+      fgets(input, sizeof(input), stdin);
       while(invalidInput) {
 	if (toupper(input[0]) == 'Y') {
 	  invalidInput = 0;
