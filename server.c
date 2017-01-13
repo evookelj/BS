@@ -19,14 +19,14 @@ void process( char * s ) {
   }
 }
 
-/*
+
 
 int run_game() {
   //opening(); commenting out so i can just test game play
   
   return -1;
 }
-
+/*
 void start_game() {
   //create struct
   //add players
@@ -83,7 +83,7 @@ int accuse(player* accuser) {
 
 void give_cards(player* giveTo, card* cards) {
 }
-
+*/
  void opening() {
   int validInput = 1; //1 means invalid user input, 0 means valid user input so move on
   char* s;
@@ -121,11 +121,12 @@ void give_cards(player* giveTo, card* cards) {
 
   s = "Do you need a refresher of the rules?(Y/N): ";
   //start_game();
-  }*/
+  }
 
 int main() {
   int sd, connection;
   sd = server_setup(); 
+  opening();
   while (1) {
     connection = server_connect( sd );
     int f = fork();
