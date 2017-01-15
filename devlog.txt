@@ -1,0 +1,30 @@
+emmaV -- 01-07-2017 12:00
+      - Do detailed header files for profile, players, and game
+
+graceS -- 01-09-2017 13:30
+       - Fix some stuff in header files
+       - Begin gameplay
+       - Make case insensitive
+
+emmaV -- 01-09-2017 17:00
+      - Work on profile-handling code
+
+graceS -- 01-10-2017 13:00
+	- Identify issue in profiles
+
+emmaV -- 01-11-2017 19:00
+      - Work on/make bugs in human playing
+      - Work on outline of general gameplay in code
+
+graceS -- 01-11-2017 20:00
+       - Add print statements, fix small error
+
+emmaV -- 01-12-2017 16:00
+      - Start incorporating networking into existing code
+
+emmaV & graceS -- 01-13-2017
+      - Start implementing game
+      - Get the opening input/output workin more to our liking
+
+emmaV -- 01-15-2017 11:00
+      - Add updating fxnality to profles
