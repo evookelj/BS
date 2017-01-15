@@ -86,12 +86,35 @@ int update_bs_ratio(char* name, int plusLies, int plusTotal) {
     printf("Error opening profile of %s\n",name);
     return -1;
   }
-  int wr = write(fd, this, sizeof(this));
+  int wr = write(fd, this, sizeof(profile));
   if (wr<0) {
     printf("Error writing to profile of %s\n", name);
     return -1;
   }
   printf("Successfully updated BS ratio!\n");
+  return 0;
+}
+
+int update_wl_ratio(char* name, int isWin) {
+  profile* this = get_profile(name);
+  if (isWin) {
+    this->wins += 1;
+  } else {
+    this->losses += 1;
+  }
+
+  char* loc = file_location(name);
+  int fd = open(loc, O_WRONLY, 0644);
+  if (fd<0) {
+    printf("Error opening profile of %s\n",name);
+    return -1;
+  }
+  int wr = write(fd, this, sizeof(profile));
+  if (wr<0) {
+    printf("Error writing to profile of %s\n", name);
+    return -1;
+  }
+  printf("Successfully updated win/loss ratio!\n");
   return 0;
 }
 
@@ -110,7 +133,7 @@ int main() {
   printf("%s\n",display_profile(usr));
   printf("%d\n", update_bs_ratio(usr, 3, 5));
   printf("%s\n",display_profile(usr));
-  printf("%d\n", update_bs_ratio(usr, 2, 7));
+  printf("%d\n", update_wl_ratio(usr, 0));
   printf("%s\n",display_profile(usr));
   return 0;
 }

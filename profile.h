@@ -30,11 +30,11 @@ char* create_profile(char* name);
 profile* get_profile(char* name);
 
 //updates current bs_ratio (lies/total)
-int update_bs_ratio(char* name, int lies, int total);
+int update_bs_ratio(char* name, int plusLies, int plusTotal);
 
 //isWin=0 if loss, 1 if win for a game
 //updates existing win/loss ratio
-void update_wl_ratio(char* name, int isWin);
+int update_wl_ratio(char* name, int isWin);
 
 //returns string of profile info formatted
 char* display_profile(char* name);
