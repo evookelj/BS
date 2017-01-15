@@ -9,5 +9,7 @@
 //Starts game for client. Logins to their profile
 profile* login();
 
+//Prints the rules for the client need be.
+void rules();
 
 #endif

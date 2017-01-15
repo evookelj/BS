@@ -4,6 +4,7 @@
 
 int main( int argc, char *argv[] ) {
   profile *myProf = login();
+  rules();
   char *host;
   if (argc != 2 ) {
     printf("host not specified, conneting to 127.0.0.1\n");
