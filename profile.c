@@ -127,6 +127,7 @@ char* display_profile(char* name) {
   return ret;
 }
 
+/*
 int main() {
   char* usr = "emmavook";
   printf("%s\n", create_profile(usr));
@@ -137,3 +138,4 @@ int main() {
   printf("%s\n",display_profile(usr));
   return 0;
 }
+*/
