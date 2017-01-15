@@ -4,6 +4,10 @@
 #include <stdio.h>
 #include <ctype.h>
 
-void opening();
+#include "profile.h"
+
+//Starts game for client. Logins to their profile
+profile* login();
+
 
 #endif

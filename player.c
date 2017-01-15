@@ -1,10 +1,11 @@
 #include "player.h"
 #include "profile.h"
 
-void opening() {
+profile* login() {
   int validInput = 1; //1 means invalid user input, 0 means valid user input so move on
   char* s;
   char input[128];
+  profile* this;
 
   s = "Hello, and welcome to BS. Are you new to the game and need to create a profile?(Y/N): ";
   printf("%s", s);
@@ -18,6 +19,7 @@ void opening() {
       *strchr(input, '\n') = '\0';
       printf("Name: %s\n", input);
       create_profile(input);
+      this = get_profile(input);
       printf("%s", display_profile(input));
     }
     else if(toupper(input[0]) == 'N') {
@@ -27,6 +29,7 @@ void opening() {
       fgets(input, sizeof(input), stdin);
       *strchr(input, '\n') = '\0';
       printf("%s", display_profile(input));
+      this  = get_profile(input);
     }
     else {
       s = "Invalid input. Please enter 'Y' for yes and 'N' for no: ";
@@ -35,6 +38,7 @@ void opening() {
     }
   }
 
+  return this;
   s = "Do you need a refresher of the rules?(Y/N): ";
   //start_game();
 }

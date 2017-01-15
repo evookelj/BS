@@ -28,3 +28,6 @@ emmaV & graceS -- 01-13-2017
 
 emmaV -- 01-15-2017 11:00
       - Add updating fxnality to profles
+
+graceS -- 01-15-2017 12:00
+       - Add profiles to client
