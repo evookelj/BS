@@ -75,6 +75,26 @@ profile* get_profile(char* name) {
   return this;
 }
 
+int update_bs_ratio(char* name, int plusLies, int plusTotal) {
+  profile* this = get_profile(name);
+  this->lies += plusLies;
+  this->total_claims += plusTotal;
+  char* loc = file_location(name);
+
+  int fd = open(loc, O_WRONLY, 0644);
+  if (fd<0) {
+    printf("Error opening profile of %s\n",name);
+    return -1;
+  }
+  int wr = write(fd, this, sizeof(this));
+  if (wr<0) {
+    printf("Error writing to profile of %s\n", name);
+    return -1;
+  }
+  printf("Successfully updated BS ratio!\n");
+  return 0;
+}
+
 char* display_profile(char* name) {
   profile* this = get_profile(name);
   char* ret = malloc(sizeof(1, 10000));
@@ -88,6 +108,9 @@ int main() {
   char* usr = "emmavook";
   printf("%s\n", create_profile(usr));
   printf("%s\n",display_profile(usr));
-  
+  printf("%d\n", update_bs_ratio(usr, 3, 5));
+  printf("%s\n",display_profile(usr));
+  printf("%d\n", update_bs_ratio(usr, 2, 7));
+  printf("%s\n",display_profile(usr));
   return 0;
 }
