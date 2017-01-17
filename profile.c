@@ -20,7 +20,7 @@ char* create_profile(char* name) {
   new.losses = 0;
 
   char* loc = file_location(name);
-  int fd = open(loc, O_WRONLY | O_CREAT | O_EXCL | O_APPEND, 0644);
+  int fd = open(loc, O_WRONLY | O_CREAT | O_EXCL, 0644);
   if (fd<0) {
     return "Username already exists.";
   } else {
@@ -120,6 +120,9 @@ int update_wl_ratio(char* name, int isWin) {
 
 char* display_profile(char* name) {
   profile* this = get_profile(name);
+  if (this==NULL) {
+    return "";
+  }
   char* ret = malloc(sizeof(1, 10000));
   sprintf(ret, "Lies: %d\nTotal Claims: %d\nWins: %d\nLosses: %d\n\n",
 	  this->lies, this->total_claims, this->wins, this->losses);

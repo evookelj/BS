@@ -21,10 +21,12 @@ void process( char * s ) {
 
 player* get_player( int sd ) {
   player* this = malloc(sizeof(player));
-  char buffer[MESSAGE_BUFFER_SIZE];
+  //char buffer[MESSAGE_BUFFER_SIZE];
+  player* buffer;
   while(read( sd, buffer, sizeof(buffer) )) {
-    printf("[SERVER %d] received: %s\n", getpid(), buffer );
-    this = &buffer;
+    printf("[SERVER %d] received: %lu\n", getpid(), buffer );
+    printf("%s joined game by [SERVER %d]\n", buffer->name, getpid() );
+    *(this) = *(buffer);
     printf("%s joined game by [SERVER %d]\n", this->name, getpid() );
     break;
   }
@@ -45,7 +47,7 @@ int run_game() {
     int f = fork();
     if (f == 0) {
       close(sd);
-      G.players[connects] = (player*)get_player( connection );
+      G.players[connects] = *((player*)get_player( connection ));
       sub_server( connection );
       exit(0);
     }
