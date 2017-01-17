@@ -145,6 +145,16 @@ int run_human_turn(player* this_player, int curr_val) {
   return 0;
 }
 
+int is_not_dup(int sel[17], int num_cards, int input) {
+  int i;
+  for (i=0; i<num_cards; i++) {
+    if (sel[i] == input) {
+      return 0;
+    }
+  }
+  return 1;
+}
+
 int run_BS(player* this_player, int curr_val) {
   printf("To pick cards to put down, enter the index as listed in your printed deck (from 1 to %d) and press enter. Enter 'S/s' to stop after selecting at least one card.\n", this_player->num_cards-1);
   int cont = 1;
@@ -156,8 +166,12 @@ int run_BS(player* this_player, int curr_val) {
     int ind = (int)strtol(input, (char **)NULL, 10);
     printf("ind: %d\n", ind);
     if (ind > 0 && ind < this_player->num_cards) {
-      sel[count] = ind;
-      count++;
+      if (is_not_dup(sel, this_player->num_cards, ind)) {
+	sel[count] = ind;
+	count++;
+      } else {
+	printf("This index has already been selected. Try again.\n");
+      }
     } else if (ind==0) {
       printf("this: %s\n", input);
       if (ind==0 && toupper(input[0]) == 'S') {
