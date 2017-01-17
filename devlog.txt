@@ -35,3 +35,5 @@ graceS -- 01-15-2017 12:00
 graceS -- 01-16-2017
        - Try to do networking
        - Failed at networking :'(
+emmaV -- 01-17-2017 14:20
+	- Do error checking on profile creation/login upon start of game
