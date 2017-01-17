@@ -96,7 +96,7 @@ int add_card(player* this_player, card* to_add) {
 
 void print_hand(player* this_player) {
   int i;
-  for (i=0; i<this_player->num_cards; i++) {
+  for (i=1; i<this_player->num_cards; i++) {
     printf("Hand at %d: %d of %s\n", i, this_player->hand[i].value, this_player->hand[i].type);
   }
 }
@@ -104,7 +104,7 @@ void print_hand(player* this_player) {
 char* get_fitting_cards(player* this_player, int curr_val) {
   char* ret = calloc(1, 100);
   int i;
-  for (i=0; i<this_player->num_cards; i++) {
+  for (i=i; i<=this_player->num_cards; i++) {
     if (this_player->hand[i].value == curr_val) {
       char desc[30];
       sprintf(desc, "%d of %s\n", this_player->hand[i].value, this_player->hand[i].type);
@@ -130,8 +130,8 @@ int run_human_turn(player* this_player, int curr_val) {
     if(toupper(input[0]) == 'Y') {
       invalidInput = 0;
       printf("Run BS\n");
-      return 0;
-      //return run_BS(this_player, curr_val);
+      //return 0;
+      return run_BS(this_player, curr_val);
     } else if(toupper(input[0]) == 'N') {
       invalidInput = 0;
       printf("Run truth\n");
@@ -140,6 +140,41 @@ int run_human_turn(player* this_player, int curr_val) {
     }
     else {
       printf("Invalid input. Please try again (Y/y/N/n).\n");
+    }
+  }
+  return 0;
+}
+
+int run_BS(player* this_player, int curr_val) {
+  printf("To pick cards to put down, enter the index as listed in your printed deck (from 1 to %d) and press enter. Enter 'S/s' to stop after selecting at least one card.\n", this_player->num_cards-1);
+  int cont = 1;
+  int sel[this_player->num_cards];
+  int count = 0;
+  char input[20];
+  while (cont) {
+    fgets(input, sizeof(input), stdin);
+    /*
+    if (!strcmp(toupper(input[0]), "S")) {
+      if (count < 1) {
+	printf("You must select at least one card before stopping.\n");
+      } else {
+	printf("Great! You have selected to put down the following cards and claim them as %d's\n", curr_val);
+	int i;
+	for (i=0; i<count; i++) {
+	  printf("%d of %s", this_player->hand[sel[i]].value, this_player->hand[sel[i]].type);
+	}
+	cont = 0;
+      }
+    }
+    */
+    printf("b\n");
+    int ind = (int)strtol(input, (char **)NULL, 10);
+    printf("ind: %d\n", ind);
+    if (ind > 0 && ind < this_player->num_cards) {
+      sel[count] = ind;
+      count++;
+    } else {
+      printf("Invalid number. Try again (from 1 to %d) or enter S/s to stop.\n", this_player->num_cards-1);
     }
   }
   return 0;
