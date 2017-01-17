@@ -23,9 +23,10 @@ player* get_player( int sd ) {
   player* this = malloc(sizeof(player));
   //char buffer[MESSAGE_BUFFER_SIZE];
   player* buffer;
-  while(read( sd, buffer, sizeof(buffer) )) {
-    printf("[SERVER %d] received: %lu\n", getpid(), buffer );
-    printf("%s joined game by [SERVER %d]\n", buffer->name, getpid() );
+  while(read( sd, buffer, sizeof(player) )) {
+    printf("[SERVER %d] received: %d\n", getpid(), sizeof(*(buffer)));
+    //printf("user: %s\n", buffer->name);
+    //printf("%s joined game by [SERVER %d]\n", buffer->name, getpid() );
     *(this) = *(buffer);
     printf("%s joined game by [SERVER %d]\n", this->name, getpid() );
     break;

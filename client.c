@@ -4,7 +4,7 @@
 #include "server.h"
 
 int main( int argc, char *argv[] ) {
-  profile *myProf = login();
+  char* myName = login();
   char *host;
   if (argc != 2 ) {
     printf("host not specified, conneting to 127.0.0.1\n");
@@ -23,9 +23,9 @@ int main( int argc, char *argv[] ) {
   //Send player struct to server
   player *me = malloc(sizeof(player));
   me->type = 1;//human
-  me->name = myProf->name;
+  me->name = myName;
   printf("Sending player struct to server: %s\n", me->name);
-  write( sd, &me, sizeof(player));
+  write( sd, me, sizeof(player));
 
   /*
   char buffer[MESSAGE_BUFFER_SIZE];

@@ -1,11 +1,12 @@
 #include "player.h"
 #include "profile.h"
 
-profile* login() {
+//returns username once valid one is gotten from player
+char* login() {
   int invalidInput = 1; //1 means invalid user input, 0 means valid user input so move on
   char* s;
   char input[128];
-  profile* this;
+  char* this = calloc(1,30);
 
   s = "Hello, and welcome to BS. Are you new to the game and need to create a profile?(Y/N): ";
   printf("%s", s);
@@ -24,11 +25,15 @@ profile* login() {
 	if (strlen(resp)) {
 	  printf("%s. Try a different username.\n",resp);
 	} else {
-	  this = get_profile(input);
-	  this->name = input;
-	  printf("%s", display_profile(input));
-	  invalidInput = 0;
-	  invalidUser = 0;
+	  if (get_profile(input) != NULL) {
+	    strcpy(this, input);
+	    printf("%s", display_profile(input));
+	    invalidInput = 0;
+	    invalidUser = 0;
+	  }
+	  else {
+	    printf("Error getting profile for %s. Try again or try different username.\n", input);
+	  }
 	}
       }
     }
@@ -43,8 +48,7 @@ profile* login() {
 	fgets(input, sizeof(input), stdin);
       } else {
 	printf("%s", display);
-	this  = get_profile(input);
-	this->name = input;
+	strcpy(this, input);
 	invalidInput = 0;
       }
     }
@@ -54,7 +58,6 @@ profile* login() {
       fgets(input, sizeof(input), stdin);
     }
   }
-
   return this;
 }
 

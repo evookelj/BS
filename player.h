@@ -5,9 +5,10 @@
 #include <ctype.h>
 
 #include "profile.h"
+#include "server.h"
 
 //Starts game for client. Logins to their profile
-profile* login();
+char* login();
 
 //Prints the rules for the client need be.
 void rules();
