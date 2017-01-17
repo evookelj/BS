@@ -1,6 +1,7 @@
 #include "player.h"
 #include "profile.h"
 
+/*
 //returns username once valid one is gotten from player
 char* login() {
   int invalidInput = 1; //1 means invalid user input, 0 means valid user input so move on
@@ -84,4 +85,31 @@ void rules() {
       fgets(input, sizeof(input), stdin);
     }
   }
+}
+*/
+
+int add_card(player* this_player, card* to_add) {
+  //this_player->hand = calloc(sizeof(card), 17);
+  this_player->hand[this_player->num_cards] = *(to_add);
+  this_player->num_cards++;
+  return 0;
+}
+
+void print_hand(player* this_player) {
+  int i;
+  for (i=0; i<this_player->num_cards; i++) {
+    printf("%s's hand at %d: %d of %s\n", this_player->name, i, this_player->hand[i].value, this_player->hand[i].type);
+  }
+}
+
+int main() {
+  player* emma = malloc(sizeof(player));
+  emma->name = "emma";
+  emma->num_cards = 0;
+  card* add = malloc(sizeof(card));
+  add->type = "diamond";
+  add->value = 4;
+  add_card(emma, add);
+  print_hand(emma);
+  return 0;
 }

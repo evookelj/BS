@@ -22,6 +22,7 @@ struct player_struct {
   unsigned short type; //0=CPU, 1=HUMAN
   char* name;
   card hand[17];
+  int num_cards;
 };
 
 typedef struct player_struct player;
