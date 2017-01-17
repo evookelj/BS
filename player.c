@@ -153,28 +153,27 @@ int run_BS(player* this_player, int curr_val) {
   char input[20];
   while (cont) {
     fgets(input, sizeof(input), stdin);
-    /*
-    if (!strcmp(toupper(input[0]), "S")) {
-      if (count < 1) {
-	printf("You must select at least one card before stopping.\n");
-      } else {
-	printf("Great! You have selected to put down the following cards and claim them as %d's\n", curr_val);
-	int i;
-	for (i=0; i<count; i++) {
-	  printf("%d of %s", this_player->hand[sel[i]].value, this_player->hand[sel[i]].type);
-	}
-	cont = 0;
-      }
-    }
-    */
-    printf("b\n");
     int ind = (int)strtol(input, (char **)NULL, 10);
     printf("ind: %d\n", ind);
     if (ind > 0 && ind < this_player->num_cards) {
       sel[count] = ind;
       count++;
-    } else {
-      printf("Invalid number. Try again (from 1 to %d) or enter S/s to stop.\n", this_player->num_cards-1);
+    } else if (ind==0) {
+      printf("this: %s\n", input);
+      if (ind==0 && toupper(input[0]) == 'S') {
+	if (count < 1) {
+	  printf("You must select at least one card before stopping.\n");
+	} else {
+	  printf("Great! You have selected to put down the following cards and claim them as %d's.\n", curr_val);
+	  int i;
+	  for (i=0; i<count; i++) {
+	    printf("%d of %s\n", this_player->hand[sel[i]].value, this_player->hand[sel[i]].type);
+	  }
+	  cont = 0;
+	}
+      } else {
+	printf("Invalid input. Try again (from 1 to %d) or enter S/s to stop.\n", this_player->num_cards-1);
+      }
     }
   }
   return 0;
