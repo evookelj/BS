@@ -97,7 +97,7 @@ int add_card(player* this_player, card* to_add) {
 void print_hand(player* this_player) {
   int i;
   for (i=0; i<this_player->num_cards; i++) {
-    printf("%s's hand at %d: %d of %s\n", this_player->name, i, this_player->hand[i].value, this_player->hand[i].type);
+    printf("Hand at %d: %d of %s\n", i, this_player->hand[i].value, this_player->hand[i].type);
   }
 }
 
@@ -114,6 +114,37 @@ char* get_fitting_cards(player* this_player, int curr_val) {
   return ret;
 }
 
+//return 0 for BS'ing, 1 for truth'ing
+int run_human_turn(player* this_player, int curr_val) {
+  printf("The current value in play is %d. The cards you have that fit this are: \n%s\nPress enter to see your whole deck.\n", curr_val, get_fitting_cards(this_player, curr_val));
+  char input[100];
+  fgets(input, sizeof(input), stdin);
+  printf("Your whole deck: \n");
+  print_hand(this_player);
+  printf("Press enter to continue.\n");
+  fgets(input, sizeof(input), stdin);
+  printf("Would you like to BS? (Y/y/N/n)\n");
+  int invalidInput = 1;
+  while(invalidInput) {
+    fgets(input, sizeof(input), stdin);
+    if(toupper(input[0]) == 'Y') {
+      invalidInput = 0;
+      printf("Run BS\n");
+      return 0;
+      //return run_BS(this_player, curr_val);
+    } else if(toupper(input[0]) == 'N') {
+      invalidInput = 0;
+      printf("Run truth\n");
+      return 0;
+      //return run_truth(this_player, curr_val);
+    }
+    else {
+      printf("Invalid input. Please try again (Y/y/N/n).\n");
+    }
+  }
+  return 0;
+}
+
 int main() {
   player* emma = malloc(sizeof(player));
   emma->name = "emma";
@@ -125,7 +156,6 @@ int main() {
     add->value = i;
     add_card(emma, add);
   }
-  print_hand(emma);
-  printf("%s\n", get_fitting_cards(emma, 7));
+  run_human_turn(emma, 7);
   return 0;
 }
