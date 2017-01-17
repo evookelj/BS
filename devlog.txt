@@ -31,3 +31,7 @@ emmaV -- 01-15-2017 11:00
 
 graceS -- 01-15-2017 12:00
        - Add profiles to client
+
+graceS -- 01-16-2017
+       - Try to do networking
+       - Failed at networking :'(

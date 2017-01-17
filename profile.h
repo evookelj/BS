@@ -14,6 +14,7 @@ struct profileStruct {
   int total_claims;
   int wins;
   int losses;
+  char *name;
 };
 
 typedef struct profileStruct profile;

@@ -19,42 +19,43 @@ void process( char * s ) {
   }
 }
 
-int main() {
+player* get_player( int sd ) {
+  player* this = malloc(sizeof(player));
+  char buffer[MESSAGE_BUFFER_SIZE];
+  while(read( sd, buffer, sizeof(buffer) )) {
+    printf("[SERVER %d] received: %s\n", getpid(), buffer );
+    this = &buffer;
+    printf("%s joined game by [SERVER %d]\n", this->name, getpid() );
+    break;
+  }
+  return this;
+}
+
+int run_game() {
+  game G;
   int sd, connection;
   sd = server_setup(); 
-  //opening();
   int connects = 0;
+  int ready_to_play = 0;
   while (1) {
     char input[128];
     char* s;
     connection = server_connect( sd );
     connects++;
-    if (connects>=3) {
-      printf("Is this everyone?\n");
-      int invalidInput = 1;
-      fgets(input, sizeof(input), stdin);
-      while(invalidInput) {
-	if (toupper(input[0]) == 'Y') {
-	  invalidInput = 0;
-	}
-	else if(toupper(input[0]) == 'N') {
-	  invalidInput = 0;
-	}
-	else {
-	  s = "Invalid input. Please enter 'Y' for yes and 'N' for no: ";
-	  printf("%s", s);
-	  fgets(input, sizeof(input), stdin);
-	}
-      }
-    }
     int f = fork();
-    if ( f == 0 ) {
+    if (f == 0) {
       close(sd);
+      G.players[connects] = (player*)get_player( connection );
       sub_server( connection );
       exit(0);
-    } else {
-      close( connection );
+    }
+    else{
+    close( connection );
     }
   }
-  return 0;
+}
+
+
+int main() {
+  return run_game();
 }
