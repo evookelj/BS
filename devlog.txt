@@ -49,3 +49,4 @@ emmaV -- 01-17-2017 16:55
 
 graceS -- 01-18-2017
        - Use of queue to hold ip addresses working for collecting players
+       - Fix printint ip queue

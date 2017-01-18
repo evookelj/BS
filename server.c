@@ -22,8 +22,10 @@ int update_game_status(int pid) {
 void print_IP( unsigned int queue[], int size ) {
   printf("IP Queue: ");
   int i;
+  struct in_addr add;
   for ( i = 0; i < size; i++ ) {
-    //printf("%s ", inet_ntoa(queue[i]));
+    add.s_addr = (uint32_t) queue[i];
+    printf("%s ", inet_ntoa(add));
     printf("%d, ", queue[i]);
   }
   printf("\n");
