@@ -25,8 +25,8 @@ void print_IP( unsigned int queue[], int size ) {
   struct in_addr add;
   for ( i = 0; i < size; i++ ) {
     add.s_addr = (uint32_t) queue[i];
-    printf("%s ", inet_ntoa(add));
-    printf("%d, ", queue[i]);
+    printf("%s, ", inet_ntoa(add));
+    //printf("%d, ", queue[i]);
   }
   printf("\n");
 }
@@ -54,46 +54,31 @@ int get_players( int sd, unsigned int *ip_queue, int *queue_size, int timeout) {
   return 0;
 }
 
-/*
-player* get_player( int sd ) {
-  player* this = malloc(sizeof(player));
-  //char buffer[MESSAGE_BUFFER_SIZE];
-  player* buffer;
-  while(read( sd, buffer, sizeof(player) )) {
-    printf("[SERVER %d] received: %d\n", getpid(), sizeof(*(buffer)));
-    //printf("user: %s\n", buffer->name);
-    //printf("%s joined game by [SERVER %d]\n", buffer->name, getpid() );
-    *(this) = *(buffer);
-    printf("%s joined game by [SERVER %d]\n", this->name, getpid() );
-    break;
+int transfer_IPs( unsigned int *ip_queue, int *queue_size, unsigned int *player_IPs, int num_players ) {
+  int i;
+  // fill player_IPs w/ zeroes
+  for ( i = 0; i < 4; i++ )
+    player_IPs[i] = 0;
+  // fill player_IPs with IPs FROM ip_queue
+  for ( i = 0; i < num_players; i++ )
+    player_IPs[i] = ip_queue[i];
+
+  // remove transferred ips from ip_queue
+  int j = num_players;
+  for ( i = 0; i < *queue_size - num_players; i++ ) {
+    ip_queue[i] = ip_queue[i+j];
   }
-  return this;
+  // update queue_size
+  (*queue_size) = (*queue_size) - num_players;
+  
+  return num_players;
 }
 
-int run_game() {
-  game G;
-  int sd, connection;
-  sd = server_setup(); 
-  int connects = 0;
-  int ready_to_play = 0;
-  while (1) {
-    char input[128];
-    char* s;
-    connection = server_connect( sd );
-    connects++;
-    int f = fork();
-    if (f == 0) {
-      close(sd);
-      G.players[connects] = *((player*)get_player( connection ));
-      sub_server( connection );
-      exit(0);
-    }
-    else{
-    close( connection );
-    }
-  }
+int run_game(unsigned int *player_IPs, int num_players) {
+  printf("Getting to gameplay\n");
+  return 0;
 }
-*/
+
 int main() {
 
   int sd, connection;
@@ -101,19 +86,26 @@ int main() {
   int queue_size = 0;
   int game_running; // 0 if no game running, 1 if there is a game running
   int game_pid;
+  int num_play = 3;
 
   sd = server_setup();
 
   while(1) {
 
-    if (queue_size >= 3 && game_running == 0) {
-      //insert asking if 3 players in enough
-      game_running = 1;
-      game_pid = fork();
-      signal(SIGCHLD, SIG_IGN); // doesn't wait
-      if (game_pid == 0) { // child process
-	//run_game(ip_queue, queue_size);
-	exit(0);
+    if ( queue_size >= num_play && game_running == 0 ) { // ready to start game
+      unsigned int player_IPs[queue_size];
+      int num_players;
+      num_players = transfer_IPs(ip_queue, &queue_size, player_IPs, queue_size);
+
+      if ( game_running == 0 ) { // no game running
+	game_running = 1;
+	game_pid = fork();
+	signal(SIGCHLD, SIG_IGN); // circumvents waiting
+	if ( game_pid == 0 ) {  // child process
+	  run_game(player_IPs, num_players); // start game
+	  printf("hi\n");
+	  exit(0);
+	}
       }
     }
 
