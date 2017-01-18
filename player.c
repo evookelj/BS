@@ -101,50 +101,6 @@ void print_hand(player* this_player) {
   }
 }
 
-char* get_fitting_cards(player* this_player, int curr_val) {
-  char* ret = calloc(1, 100);
-  int i;
-  for (i=i; i<=this_player->num_cards; i++) {
-    if (this_player->hand[i].value == curr_val) {
-      char desc[30];
-      sprintf(desc, "%d of %s\n", this_player->hand[i].value, this_player->hand[i].type);
-      strcat(ret, desc);
-    }
-  }
-  return ret;
-}
-
-//return 0 for BS'ing, 1 for truth'ing
-int run_human_turn(player* this_player, int curr_val) {
-  printf("The current value in play is %d. The cards you have that fit this are: \n%s\nPress enter to see your whole deck.\n", curr_val, get_fitting_cards(this_player, curr_val));
-  char input[100];
-  fgets(input, sizeof(input), stdin);
-  printf("Your whole deck: \n");
-  print_hand(this_player);
-  printf("Press enter to continue.\n");
-  fgets(input, sizeof(input), stdin);
-  printf("Would you like to BS? (Y/y/N/n)\n");
-  int invalidInput = 1;
-  while(invalidInput) {
-    fgets(input, sizeof(input), stdin);
-    if(toupper(input[0]) == 'Y') {
-      invalidInput = 0;
-      printf("Run BS\n");
-      //return 0;
-      return run_BS(this_player, curr_val);
-    } else if(toupper(input[0]) == 'N') {
-      invalidInput = 0;
-      printf("Run truth\n");
-      return 0;
-      //return run_truth(this_player, curr_val);
-    }
-    else {
-      printf("Invalid input. Please try again (Y/y/N/n).\n");
-    }
-  }
-  return 0;
-}
-
 int is_not_dup(int sel[17], int num_cards, int input) {
   int i;
   for (i=0; i<num_cards; i++) {
@@ -190,6 +146,75 @@ int run_BS(player* this_player, int curr_val) {
       }
     }
   }
+  return count;
+}
+
+card* get_fitting(player* this_player, int curr_val) {
+  card* ret = calloc(sizeof(card), this_player->num_cards);
+  int i;
+  int count = 0;
+  for (i=0; i<this_player->num_cards; i++) {
+    if (this_player->hand[i].value == curr_val) {
+      printf("index %d: %d of %s\n", count+1, this_player->hand[i].value, this_player->hand[i].type);
+      ret[count] = this_player->hand[i];
+      count++;
+    }
+  }
+  if (count==0) {
+    printf("None\n");
+  }
+  return ret;
+}
+
+int run_truth_turn(player* this_player, int count, int curr_val) {
+  char input[30];
+  if (count==1) {
+    printf("You only have one card of value %d, so you must play that. Press enter to continue.\n", curr_val);
+    fgets(input, sizeof(input), stdin);
+  } else {
+    printf("else\n");
+  }
+  return 0;
+}
+
+//return 0 for BS'ing, 1 for truth'ing
+int run_human_turn(player* this_player, int curr_val) {
+  printf("The current value in play is %d. The cards you have that fit this are: \n", curr_val);
+  //int count = get_fitting_cards(this_player, curr_val);
+  int count = 0;
+  card* fitting = get_fitting(this_player, curr_val);
+  if (fitting[0].value != 0) {
+    count = 2;
+  }
+  int play_count;
+  if (count==0) {
+    printf("You have no choice but to BS, as you have no cards of value %d.\n", curr_val);
+    play_count = run_BS(this_player, curr_val);
+  } else {
+    printf("\nPress enter to see your whole deck.\n");
+    char input[100];
+    fgets(input, sizeof(input), stdin);
+    printf("Your whole deck: \n");
+    print_hand(this_player);
+    printf("Press enter to continue.\n");
+    fgets(input, sizeof(input), stdin);
+    printf("Would you like to BS? (Y/y/N/n)\n");
+    int invalidInput = 1;
+    while(invalidInput) {
+      fgets(input, sizeof(input), stdin);
+      if(toupper(input[0]) == 'Y') {
+	invalidInput = 0;
+	play_count = run_BS(this_player, curr_val);
+	return play_count;
+      } else if(toupper(input[0]) == 'N') {
+	invalidInput = 0;
+	return run_truth_turn(this_player, count, curr_val);
+      }
+      else {
+	printf("Invalid input. Please try again (Y/y/N/n).\n");
+      }
+    }
+  }
   return 0;
 }
 
@@ -198,12 +223,24 @@ int main() {
   emma->name = "emma";
   emma->num_cards = 0;
   int i;
-  for (i=1; i<12; i++) {
+  for (i=1; i<4; i++) {
     card* add = malloc(sizeof(card));
     add->type = "diamond";
     add->value = i;
     add_card(emma, add);
   }
-  run_human_turn(emma, 7);
+  for (i=1; i<4; i++) {
+    card* add = malloc(sizeof(card));
+    add->type = "heart";
+    add->value = i;
+    add_card(emma, add);
+  }
+  for (i=3; i<7; i++) {
+    card* add = malloc(sizeof(card));
+    add->type = "spade";
+    add->value = i;
+    add_card(emma, add);
+  }
+  run_human_turn(emma, 4);
   return 0;
 }
