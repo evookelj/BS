@@ -149,52 +149,84 @@ int run_BS(player* this_player, int curr_val) {
   return count;
 }
 
-card* get_fitting(player* this_player, int curr_val) {
-  card* ret = calloc(sizeof(card), this_player->num_cards);
+int* get_fitting(player* this_player, int curr_val, int* count) {
+  static int ret[17];
   int i;
-  int count = 0;
+  int cnt = 0;
   for (i=0; i<this_player->num_cards; i++) {
     if (this_player->hand[i].value == curr_val) {
-      printf("index %d: %d of %s\n", count+1, this_player->hand[i].value, this_player->hand[i].type);
-      ret[count] = this_player->hand[i];
-      count++;
+      printf("index %d: %d of %s\n", cnt+1, this_player->hand[i].value, this_player->hand[i].type);
+      ret[cnt] = i;
+      cnt++;
     }
   }
-  if (count==0) {
+  if (cnt==0) {
     printf("None\n");
   }
+  *(count) = cnt;
+  
   return ret;
 }
 
-int run_truth_turn(player* this_player, int count, int curr_val) {
+int run_truth_turn(player* this_player, int count, int curr_val, int* fitting) {
   char input[30];
   if (count==1) {
     printf("You only have one card of value %d, so you must play that. Press enter to continue.\n", curr_val);
     fgets(input, sizeof(input), stdin);
   } else {
-    printf("else\n");
+    printf("To pick cards to put down, enter the index as listed in your printed deck of fitting cards (from 1 to %d) and press enter. Enter 'S/s' to stop after selecting at least one card.\n", count);
+    int cont = 1;
+    int sel[this_player->num_cards];
+    int cntSel = 0;
+    char input[20];
+    while (cont) {
+      fgets(input, sizeof(input), stdin);
+      int ind = (int)strtol(input, (char **)NULL, 10);
+      printf("ind: %d\n", ind);
+      if (ind > 0 && ind <= count) {
+	ind -= 1;
+	if (is_not_dup(sel, cntSel, ind)) {
+	  printf("Fitting[%d]: %d\nhand[fitting[%d]: %d of %s\n\n", ind, fitting[ind], ind, this_player->hand[fitting[ind]].value, this_player->hand[fitting[ind]].type);
+	  sel[cntSel] = fitting[ind-1];
+	  cntSel++;
+	} else {
+	  printf("This index has already been selected. Try again.\n");
+	}
+      } else if (ind==0) {
+	printf("this: %s\n", input);
+	if (ind==0 && toupper(input[0]) == 'S') {
+	  if (cntSel < 1) {
+	    printf("You must select at least one card before stopping.\n");
+	  } else {
+	    printf("Great! You have selected to put down the following cards\n");
+	    int i;
+	    for (i=0; i<cntSel; i++) {
+	      printf("%d of %s\n", this_player->hand[sel[i]].value, this_player->hand[sel[i]].type);
+	    }
+	    cont = 0;
+	  }
+	}
+      } else {
+	printf("Invalid input. Try again (from 1 to %d) or enter S/s to stop.\n",count);
+      }
+    }
   }
   return 0;
 }
 
 //return 0 for BS'ing, 1 for truth'ing
 int run_human_turn(player* this_player, int curr_val) {
-  printf("The current value in play is %d. The cards you have that fit this are: \n", curr_val);
+  printf("\nThe current value in play is %d. The cards you have that fit this are: \n", curr_val);
   //int count = get_fitting_cards(this_player, curr_val);
   int count = 0;
-  card* fitting = get_fitting(this_player, curr_val);
-  if (fitting[0].value != 0) {
-    count = 2;
-  }
+  int* fitting = get_fitting(this_player, curr_val, &count);
   int play_count;
   if (count==0) {
     printf("You have no choice but to BS, as you have no cards of value %d.\n", curr_val);
     play_count = run_BS(this_player, curr_val);
   } else {
-    printf("\nPress enter to see your whole deck.\n");
     char input[100];
-    fgets(input, sizeof(input), stdin);
-    printf("Your whole deck: \n");
+    printf("\nYour whole deck: \n");
     print_hand(this_player);
     printf("Press enter to continue.\n");
     fgets(input, sizeof(input), stdin);
@@ -208,7 +240,7 @@ int run_human_turn(player* this_player, int curr_val) {
 	return play_count;
       } else if(toupper(input[0]) == 'N') {
 	invalidInput = 0;
-	return run_truth_turn(this_player, count, curr_val);
+	return run_truth_turn(this_player, count, curr_val, fitting);
       }
       else {
 	printf("Invalid input. Please try again (Y/y/N/n).\n");
@@ -217,7 +249,7 @@ int run_human_turn(player* this_player, int curr_val) {
   }
   return 0;
 }
-/*
+
 int main() {
   player* emma = malloc(sizeof(player));
   emma->name = "emma";
@@ -241,7 +273,7 @@ int main() {
     add->value = i;
     add_card(emma, add);
   }
-  run_human_turn(emma, 4);
+  run_human_turn(emma, 3);
   return 0;
 }
-*/
+
