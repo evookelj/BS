@@ -7,7 +7,7 @@ void sub_server( int sd ) {
   char buffer[MESSAGE_BUFFER_SIZE];
   while (read( sd, buffer, sizeof(buffer) )) {
     printf("[SERVER %d] received: %s\n", getpid(), buffer );
-    process( buffer );
+    //process( buffer );
     write( sd, buffer, sizeof(buffer));    
   }
 }
@@ -19,9 +19,37 @@ int update_game_status(int pid) {
     return 0;
 }
 
-int get_players( int sd, unsigned int *ip_queue, int *queue_size) {
-  int connection = server_connect(sd, ip_queue);
-  return connection;
+void print_IP( unsigned int queue[], int size ) {
+  printf("IP Queue: ");
+  int i;
+  for ( i = 0; i < size; i++ ) {
+    //printf("%s ", inet_ntoa(queue[i]));
+    printf("%d, ", queue[i]);
+  }
+  printf("\n");
+}
+
+int get_players( int sd, unsigned int *ip_queue, int *queue_size, int timeout) {
+  int connection = initial_server_connect(sd, &ip_queue[*queue_size], timeout);
+
+  if ( connection == -1 ) {// only reached if timeout == 1 aka no new players joined
+    close(connection);
+    return -1;
+  }
+
+  /*
+  char buffer[500];
+  int port_buff = 3019;
+  read( connection, &buffer, sizeof(buffer) );
+  if ( strcmp(buffer, "client to listener") == 0 )
+    write( connection, &port_buff, sizeof(int) ); // send port to listen on to client
+  */
+  close(connection);
+
+  (*queue_size)++;
+  print_IP(ip_queue, *queue_size);
+
+  return 0;
 }
 
 /*

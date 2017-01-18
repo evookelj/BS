@@ -8,7 +8,7 @@
 #include "server.h"
 
 struct fitting_cards_struct {
-  card** fitting;
+  //card** fitting;
   int count;
 };
 

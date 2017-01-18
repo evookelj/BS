@@ -41,7 +41,11 @@ emmaV -- 01-17-2017 14:20
 
 graceS -- 01-17-2017 15:30
        - Sort of figuring out networking
+
 emmaV -- 01-17-2017 16:55
       - Add cards to a player's hand
       - Show player their options and have them pick a path
       - Card selection when BSing + check that it hasn't already been selected
+
+graceS -- 01-18-2017
+       - Use of queue to hold ip addresses working for collecting players

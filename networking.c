@@ -26,7 +26,7 @@ int server_setup() {
   return sd;
 }
 
-int server_connect(int sd, unsigned int *ip) {
+int server_connect(int sd ) {
   int connection, i;
 
   i = listen(sd, 1);
@@ -39,10 +39,34 @@ int server_connect(int sd, unsigned int *ip) {
   
   printf("[server] connected to %s\n", inet_ntoa( sock1.sin_addr ) );
   
-  *ip = sock1.sin_addr.s_addr;
   return connection;
 }
 
+int initial_server_connect(int sd, unsigned int *ip, int timeout) {
+  int connection, i;
+  if ( timeout == 1 ) { // set timer for listening for new connections
+    struct timeval time;      
+    time.tv_sec = 5;
+    time.tv_usec = 0;
+    setsockopt (sd, SOL_SOCKET, SO_RCVTIMEO, (char *)&time, sizeof(time));
+  }
+  i = listen(sd, 1);
+  error_check( i, "server listen" );
+  
+  struct sockaddr_in sock1;
+  unsigned int sock1_len = sizeof(sock1);
+  connection = accept( sd, (struct sockaddr *)&sock1, &sock1_len );
+  //error_check( connection, "server accept" );
+
+  if ( connection == -1 ) // if timeout occurred, then do not alter ip list (no new players)
+    return connection;
+
+  //New player did join!
+  printf("[server] connected to %s\n", inet_ntoa( sock1.sin_addr ) );
+  *ip = sock1.sin_addr.s_addr;
+  
+  return connection;
+}
 
 int client_connect( char *host ) {
   int sd, i;

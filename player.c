@@ -217,7 +217,7 @@ int run_human_turn(player* this_player, int curr_val) {
   }
   return 0;
 }
-
+/*
 int main() {
   player* emma = malloc(sizeof(player));
   emma->name = "emma";
@@ -244,3 +244,4 @@ int main() {
   run_human_turn(emma, 4);
   return 0;
 }
+*/
