@@ -76,6 +76,9 @@ int transfer_IPs( unsigned int *ip_queue, int *queue_size, unsigned int *player_
 
 int run_game(unsigned int *player_IPs, int num_players) {
   printf("Getting to gameplay\n");
+  //Connect to client
+
+  //While loop for gameplay
   return 0;
 }
 
