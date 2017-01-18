@@ -96,8 +96,8 @@ int add_card(player* this_player, card* to_add) {
 
 void print_hand(player* this_player) {
   int i;
-  for (i=1; i<this_player->num_cards; i++) {
-    printf("Hand at %d: %d of %s\n", i, this_player->hand[i].value, this_player->hand[i].type);
+  for (i=0; i<this_player->num_cards; i++) {
+    printf("Hand at %d: %d of %s\n", i+1, this_player->hand[i].value, this_player->hand[i].type);
   }
 }
 
@@ -105,6 +105,7 @@ int is_not_dup(int sel[17], int num_cards, int input) {
   int i;
   for (i=0; i<num_cards; i++) {
     if (sel[i] == input) {
+      printf("repeat of %d\n", sel[i]);
       return 0;
     }
   }
@@ -176,7 +177,7 @@ int run_truth_turn(player* this_player, int count, int curr_val, int* fitting) {
   } else {
     printf("To pick cards to put down, enter the index as listed in your printed deck of fitting cards (from 1 to %d) and press enter. Enter 'S/s' to stop after selecting at least one card.\n", count);
     int cont = 1;
-    int sel[this_player->num_cards];
+    int sel[count];
     int cntSel = 0;
     char input[20];
     while (cont) {
@@ -186,14 +187,17 @@ int run_truth_turn(player* this_player, int count, int curr_val, int* fitting) {
       if (ind > 0 && ind <= count) {
 	ind -= 1;
 	if (is_not_dup(sel, cntSel, ind)) {
-	  printf("Fitting[%d]: %d\nhand[fitting[%d]: %d of %s\n\n", ind, fitting[ind], ind, this_player->hand[fitting[ind]].value, this_player->hand[fitting[ind]].type);
-	  sel[cntSel] = fitting[ind-1];
+	  printf("Fitting[%d]: %d\nhand[fitting[%d]]: %d of %s\n\n", ind, fitting[ind], ind, this_player->hand[fitting[ind]].value, this_player->hand[fitting[ind]].type);
+	  sel[cntSel] = fitting[ind]+1;
 	  cntSel++;
+	  if (cntSel==count) {
+	    printf("You have selected all possible choices. On we go!\n");
+	    cont = 0;
+	  }
 	} else {
 	  printf("This index has already been selected. Try again.\n");
 	}
       } else if (ind==0) {
-	printf("this: %s\n", input);
 	if (ind==0 && toupper(input[0]) == 'S') {
 	  if (cntSel < 1) {
 	    printf("You must select at least one card before stopping.\n");
