@@ -1,5 +1,4 @@
 #include "player.h"
-#include "profile.h"
 
 /*
 //returns username once valid one is gotten from player
@@ -114,6 +113,7 @@ int is_not_dup(int sel[17], int num_cards, int input) {
 }
 
 int run_BS(player* this_player, int curr_val) {
+  update_bs_ratio(this_player->name, 1, 1);
   printf("To pick cards to put down, enter the index as listed in your printed deck (from 1 to %d) and press enter. Enter 'S/s' to stop after selecting at least one card.\n", this_player->num_cards-1);
   int cont = 1;
   int sel[this_player->num_cards];
@@ -171,6 +171,7 @@ int* get_fitting(player* this_player, int curr_val, int* count) {
 }
 
 int run_truth_turn(player* this_player, int count, int curr_val, int* fitting) {
+  update_bs_ratio(this_player->name, 0, 1);
   char input[30];
   if (count==1) {
     printf("You only have one card of value %d, so you must play that. Press enter to continue.\n", curr_val);
@@ -288,7 +289,7 @@ int run_human_accuse(player* this_player, player* last_player, card** pile, int 
   }
   return 0;
 }
-
+/*
 int main() {
   player* grace = malloc(sizeof(player));
   player* emma = malloc(sizeof(player));
@@ -342,9 +343,10 @@ int main() {
   }
   //run_human_turn(emma, 3);
   //run_human_accuse(grace, emma, NULL, 0, 2, 3, 1);
-  run_human_accuse(grace, emma, pile, p_size, 2, 3, 1);
+  run_human_accuse(grace, emma, pile, p_size, 2, 3, 0);
 
-  print_hand(emma);
+  print_hand(grace);
   return 0;
 }
+*/
 
