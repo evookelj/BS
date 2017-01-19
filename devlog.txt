@@ -59,3 +59,5 @@ emmaV -- 01-18-2017 19:00
 	    times for it to be muscle memory by now huh
  	 - Recognize stop/repeats corectly
 	 - Do a basic (sorta untested) accuse
+emmaV -- 01-19-2017 14:30
+      - Basic pile adding fxnality!!
