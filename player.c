@@ -219,6 +219,22 @@ int run_truth_turn(player* this_player, int count, int curr_val, int* fitting) {
   return 0;
 }
 
+int ask_yn() {
+  char input[100];
+  int invalidInput = 1;
+  while(invalidInput) {
+    fgets(input, sizeof(input), stdin);
+    if(toupper(input[0]) == 'Y') {
+      return 1;
+    } else if(toupper(input[0]) == 'N') {
+      return 0;
+    } else {
+      printf("Invalid input. Please try again (Y/y/N/n).\n");
+    }
+  }
+  return 0;
+}
+
 //return 0 for BS'ing, 1 for truth'ing
 int run_human_turn(player* this_player, int curr_val) {
   printf("\nThe current value in play is %d. The cards you have that fit this are: \n", curr_val);
@@ -247,26 +263,21 @@ int run_human_turn(player* this_player, int curr_val) {
   return 0;
 }
 
-int ask_yn() {
-  char input[100];
-  int invalidInput = 1;
-  while(invalidInput) {
-    fgets(input, sizeof(input), stdin);
-    if(toupper(input[0]) == 'Y') {
-      return 1;
-    } else if(toupper(input[0]) == 'N') {
-      return 0;
-    } else {
-      printf("Invalid input. Please try again (Y/y/N/n).\n");
-    }
-  }
-  return 0;
-}
-
-int run_human_accuse(player* this_player, player* last_player, card* pile, int num_cards_from_turn, int curr_val) {
+int run_human_accuse(player* this_player, player* last_player, card* pile, int num_cards_from_turn, int curr_val, int is_bs) {
   printf("Would you like to accuse %s of BS'ing their %d %d's? (Y/y/N/n)\n", last_player->name, num_cards_from_turn, curr_val);
-  int ans = ask_yn();
-  printf("ans: %d\n", ans);
+  int to_accuse = ask_yn();
+  if (to_accuse) {
+    printf("Okay, you have accused %s of BS'ing aaaaand... (Enter to continue)\n", last_player->name);
+    char input[2];
+    fgets(input, sizeof(input), stdin);
+    if (is_bs) {
+      printf("You were correct! %s now has to take the pile.\n", last_player->name);
+    } else {
+      printf("You were wrong :( and now have to take the pile.\n");
+    }
+  } else {
+    printf("Okay, moving on then...\n");
+  }
   return 0;
 }
 
@@ -304,8 +315,8 @@ int main() {
     add->value = i;
     add_card(emma, add);
   }
-  run_human_turn(emma, 3);
-  //run_human_accuse(grace, emma, NULL, 2, 3);
+  //run_human_turn(emma, 3);
+  run_human_accuse(grace, emma, NULL, 2, 3, 1);
   return 0;
 }
 
