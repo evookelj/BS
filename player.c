@@ -236,20 +236,28 @@ int run_human_turn(player* this_player, int curr_val) {
     printf("Press enter to continue.\n");
     fgets(input, sizeof(input), stdin);
     printf("Would you like to BS? (Y/y/N/n)\n");
-    int invalidInput = 1;
-    while(invalidInput) {
-      fgets(input, sizeof(input), stdin);
-      if(toupper(input[0]) == 'Y') {
-	invalidInput = 0;
-	play_count = run_BS(this_player, curr_val);
-	return play_count;
-      } else if(toupper(input[0]) == 'N') {
-	invalidInput = 0;
-	return run_truth_turn(this_player, count, curr_val, fitting);
-      }
-      else {
-	printf("Invalid input. Please try again (Y/y/N/n).\n");
-      }
+    int ans = ask_yn();
+    if(ans) {
+      play_count = run_BS(this_player, curr_val);
+      return play_count;
+    } else {
+      return run_truth_turn(this_player, count, curr_val, fitting);
+    }
+  }
+  return 0;
+}
+
+int ask_yn() {
+  char input[100];
+  int invalidInput = 1;
+  while(invalidInput) {
+    fgets(input, sizeof(input), stdin);
+    if(toupper(input[0]) == 'Y') {
+      return 1;
+    } else if(toupper(input[0]) == 'N') {
+      return 0;
+    } else {
+      printf("Invalid input. Please try again (Y/y/N/n).\n");
     }
   }
   return 0;
@@ -257,18 +265,8 @@ int run_human_turn(player* this_player, int curr_val) {
 
 int run_human_accuse(player* this_player, player* last_player, card* pile, int num_cards_from_turn, int curr_val) {
   printf("Would you like to accuse %s of BS'ing their %d %d's? (Y/y/N/n)\n", last_player->name, num_cards_from_turn, curr_val);
-  char input[100];
-  int invalidInput = 1;
-  while(invalidInput) {
-    fgets(input, sizeof(input), stdin);
-    if(toupper(input[0]) == 'Y') {
-      invalidInput = 0;
-    } else if(toupper(input[0]) == 'N') {
-      invalidInput = 0;
-    } else {
-      printf("Invalid input. Please try again (Y/y/N/n).\n");
-    }
-  }
+  int ans = ask_yn();
+  printf("ans: %d\n", ans);
   return 0;
 }
 
@@ -306,8 +304,8 @@ int main() {
     add->value = i;
     add_card(emma, add);
   }
-  //run_human_turn(emma, 3);
-  run_human_accuse(grace, emma, NULL, 2, 3);
+  run_human_turn(emma, 3);
+  //run_human_accuse(grace, emma, NULL, 2, 3);
   return 0;
 }
 
