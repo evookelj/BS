@@ -186,9 +186,10 @@ int run_truth_turn(player* this_player, int count, int curr_val, int* fitting) {
       printf("ind: %d\n", ind);
       if (ind > 0 && ind <= count) {
 	ind -= 1;
-	if (is_not_dup(sel, cntSel, ind)) {
-	  printf("Fitting[%d]: %d\nhand[fitting[%d]]: %d of %s\n\n", ind, fitting[ind], ind, this_player->hand[fitting[ind]].value, this_player->hand[fitting[ind]].type);
-	  sel[cntSel] = fitting[ind]+1;
+	printf("fitting[%d]: %d\n", ind, fitting[ind]);
+	if (is_not_dup(sel, cntSel, fitting[ind])) {
+	  printf("hand[%d]: %d of %s\n\n", fitting[ind], this_player->hand[fitting[ind]].value, this_player->hand[fitting[ind]].type);
+	  sel[cntSel] = fitting[ind];
 	  cntSel++;
 	  if (cntSel==count) {
 	    printf("You have selected all possible choices. On we go!\n");
@@ -202,7 +203,7 @@ int run_truth_turn(player* this_player, int count, int curr_val, int* fitting) {
 	  if (cntSel < 1) {
 	    printf("You must select at least one card before stopping.\n");
 	  } else {
-	    printf("Great! You have selected to put down the following cards\n");
+	    printf("Great! You have selected to put down the following cards:\n");
 	    int i;
 	    for (i=0; i<cntSel; i++) {
 	      printf("%d of %s\n", this_player->hand[sel[i]].value, this_player->hand[sel[i]].type);
