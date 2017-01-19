@@ -255,22 +255,50 @@ int run_human_turn(player* this_player, int curr_val) {
   return 0;
 }
 
+int run_human_accuse(player* this_player, player* last_player, card* pile, int num_cards_from_turn, int curr_val) {
+  printf("Would you like to accuse %s of BS'ing their %d %d's? (Y/y/N/n)\n", last_player->name, num_cards_from_turn, curr_val);
+  char input[100];
+  int invalidInput = 1;
+  while(invalidInput) {
+    fgets(input, sizeof(input), stdin);
+    if(toupper(input[0]) == 'Y') {
+      invalidInput = 0;
+    } else if(toupper(input[0]) == 'N') {
+      invalidInput = 0;
+    } else {
+      printf("Invalid input. Please try again (Y/y/N/n).\n");
+    }
+  }
+  return 0;
+}
+
 int main() {
+  player* grace = malloc(sizeof(player));
   player* emma = malloc(sizeof(player));
   emma->name = "emma";
   emma->num_cards = 0;
   int i;
   for (i=1; i<4; i++) {
     card* add = malloc(sizeof(card));
+    
     add->type = "diamond";
     add->value = i;
     add_card(emma, add);
+
+    add->type = "club";
+    add->value = i;
+    add_card(grace, add);
   }
   for (i=1; i<4; i++) {
     card* add = malloc(sizeof(card));
+    
     add->type = "heart";
     add->value = i;
     add_card(emma, add);
+
+    add->type = "spade";
+    add->value = i+4;
+    add_card(grace, add);
   }
   for (i=3; i<7; i++) {
     card* add = malloc(sizeof(card));
@@ -278,7 +306,8 @@ int main() {
     add->value = i;
     add_card(emma, add);
   }
-  run_human_turn(emma, 3);
+  //run_human_turn(emma, 3);
+  run_human_accuse(grace, emma, NULL, 2, 3);
   return 0;
 }
 
