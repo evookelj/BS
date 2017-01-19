@@ -13,4 +13,8 @@ char* login();
 //Prints the rules for the client need be.
 void rules();
 
+//used to get answer via stdin to y/n question
+//returns 1 if yes, 0 if no
+int ask_yn();
+
 #endif
