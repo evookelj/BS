@@ -289,13 +289,12 @@ int run_human_accuse(player* this_player, player* last_player, card** pile, int 
   return 0;
 }
 
+/*
 int main() {
   player* grace = malloc(sizeof(player));
   player* emma = malloc(sizeof(player));
-  //card* pile[5];
   emma->name = "emma";
   emma->num_cards = 0;
-  //int cnt = 0;
   int i;
   for (i=1; i<4; i++) {
     card* add = malloc(sizeof(card));
@@ -309,10 +308,6 @@ int main() {
     add_card(grace, add);
 
     free(add);
-    /*
-    pile[cnt] = add;
-    cnt++;
-    */
   }
   for (i=1; i<4; i++) {
     card* add = malloc(sizeof(card));
@@ -326,10 +321,6 @@ int main() {
     add_card(grace, add);
 
     free(add);
-    /*
-    pile[cnt] = add;
-    cnt++;
-    */
   }
   for (i=3; i<7; i++) {
     card* add = malloc(sizeof(card));
@@ -339,14 +330,11 @@ int main() {
 
     free(add);
 
-    /*
-    pile[cnt] = add;
-    cnt++;
-    */
   }
   //run_human_turn(emma, 3);
   run_human_accuse(grace, emma, NULL, 0, 2, 3, 1);
   //run_human_accuse(grace, emma, pile, cnt, 2, 3, 1);
   return 0;
 }
+*/
 
