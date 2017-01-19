@@ -74,10 +74,20 @@ int transfer_IPs( unsigned int *ip_queue, int *queue_size, unsigned int *player_
   return num_players;
 }
 
-int run_game(unsigned int *player_IPs, int num_players) {
+int run_game(unsigned int *player_IPs, int num_players, int sd) {
   printf("Getting to gameplay\n");
+  int sds[num_players]; //array to hold sds of clients
   //Connect to client
+  int i;
+  /*
+  for(i = num_players, i > 0, i--) {
 
+  }
+  */
+  char buffer[MESSAGE_BUFFER_SIZE];
+  while (read( sd, buffer, sizeof(buffer) )) {
+    printf("BUFFER: %s\n", buffer);
+  }
   //While loop for gameplay
   return 0;
 }
@@ -105,7 +115,7 @@ int main() {
 	game_pid = fork();
 	signal(SIGCHLD, SIG_IGN); // circumvents waiting
 	if ( game_pid == 0 ) {  // child process
-	  run_game(player_IPs, num_players); // start game
+	  run_game(player_IPs, num_players, sd); // start game
 	  printf("hi\n");
 	  exit(0);
 	}

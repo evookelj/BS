@@ -26,7 +26,7 @@ int main( int argc, char *argv[] ) {
   me->name = myName;
   printf("Sending player struct to server: %s\n", me->name);
   write( sd, me, sizeof(player));
-
+  */
 
   char buffer[MESSAGE_BUFFER_SIZE];
   while (1) {
@@ -39,6 +39,6 @@ int main( int argc, char *argv[] ) {
     read( sd, buffer, sizeof(buffer) );
     printf( "received: %s\n", buffer );
   }
-  */
+
   return 0;
 }
