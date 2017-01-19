@@ -58,3 +58,4 @@ emmaV -- 01-18-2017 19:00
 	    (you woulda thought I've typed 'for (i=0)' enough
 	    times for it to be muscle memory by now huh
  	 - Recognize stop/repeats corectly
+	 - Start human accuse
