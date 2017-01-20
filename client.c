@@ -4,6 +4,11 @@
 #include "server.h"
 
 int main( int argc, char *argv[] ) {
+  int f = fork();
+  if (!f) {
+    execlp("mkdir", "mkdir", ".profiles", (char*)0);
+  }
+  
   char* myName = login();
   char *host;
   if (argc != 2 ) {
