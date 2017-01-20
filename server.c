@@ -75,6 +75,7 @@ int transfer_IPs( unsigned int *ip_queue, int *queue_size, unsigned int *player_
 }
 
 int run_game(unsigned int *player_IPs, int num_players, int sd) {
+  close( sd );
   printf("Getting to gameplay\n");
   int sds[num_players]; //array to hold sds of clients
   //Connect to client
@@ -119,6 +120,8 @@ int main() {
 	  printf("hi\n");
 	  exit(0);
 	}
+	else
+	  close( connection );
       }
     }
 

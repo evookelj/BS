@@ -69,7 +69,7 @@ int initial_server_connect(int sd, unsigned int *ip, int timeout) {
 }
 
 int second_server_connect( char *host ) {
-  int sd;
+  int sd, i;
 
   sd = socket( AF_INET, SOCK_STREAM, 0 ); //create socket
   error_check( sd, "client socket" );
@@ -78,11 +78,12 @@ int second_server_connect( char *host ) {
   sock.sin_family = AF_INET;
   inet_aton( host, &(sock.sin_addr));
   sock.sin_port = htons(9002);
-  
+
   printf("[client] connecting to: %s\n", host );
   i = connect( sd, (struct sockaddr *)&sock, sizeof(sock) );
   error_check( i, "client connect");
 
+  return 0;
 }
 
 int client_connect( char *host ) {
