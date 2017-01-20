@@ -116,6 +116,7 @@ int main() {
 	game_pid = fork();
 	signal(SIGCHLD, SIG_IGN); // circumvents waiting
 	if ( game_pid == 0 ) {  // child process
+	  sub_server(sd);
 	  run_game(player_IPs, num_players, sd); // start game
 	  printf("hi\n");
 	  exit(0);
