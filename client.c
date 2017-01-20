@@ -2,11 +2,24 @@
 #include "player.h"
 #include "profile.h"
 #include "server.h"
+#include "dirent.h"
 
 int main( int argc, char *argv[] ) {
+  DIR * d = opendir(".");
+  struct dirent * dir;
+  int make_dir = 1;
+  while ((dir = readdir(d)) != NULL) {
+    if(dir -> d_type == DT_DIR && strcmp(dir->d_name,".profiles")==0) {
+      make_dir = 0;
+    } 
+  }
+  closedir(d); // finally close the directory
   int f = fork();
   if (!f) {
-    execlp("mkdir", "mkdir", ".profiles", (char*)0);
+    if (make_dir) {
+      execlp("mkdir", "mkdir", ".profiles", (char*)0);
+    }
+    kill(getpid(), 9);
   }
   
   char* myName = login();

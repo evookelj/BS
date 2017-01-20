@@ -2,7 +2,6 @@
 
 //returns username once valid one is gotten from player
 char* login() {
-  printf("a\n");
   int invalidInput = 1; //1 means invalid user input, 0 means valid user input so move on
   char* s;
   char input[128];
