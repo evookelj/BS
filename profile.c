@@ -22,7 +22,7 @@ char* create_profile(char* name) {
   char* loc = file_location(name);
   int fd = open(loc, O_WRONLY | O_CREAT | O_EXCL, 0644);
   if (fd<0) {
-    return "Username already exists.";
+    return "Username already exists OR you don't have .profiles.";
   } else {
     int wr = write(fd, &(new.lies), sizeof(int));
     if (wr<0) {
