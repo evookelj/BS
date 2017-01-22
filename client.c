@@ -1,28 +1,12 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
 #include "networking.h"
-#include "player.h"
-#include "profile.h"
-#include "server.h"
-#include "dirent.h"
 
 int main( int argc, char *argv[] ) {
-  DIR * d = opendir(".");
-  struct dirent * dir;
-  int make_dir = 1;
-  while ((dir = readdir(d)) != NULL) {
-    if(dir -> d_type == DT_DIR && strcmp(dir->d_name,".profiles")==0) {
-      make_dir = 0;
-    } 
-  }
-  closedir(d); // finally close the directory
-  int f = fork();
-  if (!f) {
-    if (make_dir) {
-      execlp("mkdir", "mkdir", ".profiles", (char*)0);
-    }
-    kill(getpid(), 9);
-  }
-  
-  char* myName = login();
+
   char *host;
   if (argc != 2 ) {
     printf("host not specified, conneting to 127.0.0.1\n");
@@ -30,23 +14,13 @@ int main( int argc, char *argv[] ) {
   }
   else
     host = argv[1];
-
-  //Connect to host
+  
   int sd;
+
   sd = client_connect( host );
 
-  //Print out the rules need be
-  //rules();
-  /*
-  //Send player struct to server
-  player *me = malloc(sizeof(player));
-  me->type = 1;//human
-  me->name = myName;
-  printf("Sending player struct to server: %s\n", me->name);
-  write( sd, me, sizeof(player));
-  */
-
   char buffer[MESSAGE_BUFFER_SIZE];
+  
   while (1) {
     printf("enter message: ");
     fgets( buffer, sizeof(buffer), stdin );
@@ -57,6 +31,6 @@ int main( int argc, char *argv[] ) {
     read( sd, buffer, sizeof(buffer) );
     printf( "received: %s\n", buffer );
   }
-
+  
   return 0;
 }

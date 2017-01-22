@@ -1,4 +1,13 @@
-#include "networking.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <unistd.h>
+#include <arpa/inet.h>
 
 void error_check( int i, char *s ) {
   if ( i < 0 ) {
@@ -26,7 +35,7 @@ int server_setup() {
   return sd;
 }
 
-int server_connect(int sd ) {
+int server_connect(int sd) {
   int connection, i;
 
   i = listen(sd, 1);
@@ -42,49 +51,6 @@ int server_connect(int sd ) {
   return connection;
 }
 
-int initial_server_connect(int sd, unsigned int *ip, int timeout) {
-  int connection, i;
-  if ( timeout == 1 ) { // set timer for listening for new connections
-    struct timeval time;      
-    time.tv_sec = 5;
-    time.tv_usec = 0;
-    setsockopt (sd, SOL_SOCKET, SO_RCVTIMEO, (char *)&time, sizeof(time));
-  }
-  i = listen(sd, 1);
-  error_check( i, "server listen" );
-  
-  struct sockaddr_in sock1;
-  unsigned int sock1_len = sizeof(sock1);
-  connection = accept( sd, (struct sockaddr *)&sock1, &sock1_len );
-  //error_check( connection, "server accept" );
-
-  if ( connection == -1 ) // if timeout occurred, then do not alter ip list (no new players)
-    return connection;
-
-  //New player did join!
-  printf("[server] connected to %s\n", inet_ntoa( sock1.sin_addr ) );
-  *ip = sock1.sin_addr.s_addr;
-  
-  return connection;
-}
-
-int second_server_connect( char *host ) {
-  int sd, i;
-
-  sd = socket( AF_INET, SOCK_STREAM, 0 ); //create socket
-  error_check( sd, "client socket" );
-  
-  struct sockaddr_in sock;
-  sock.sin_family = AF_INET;
-  inet_aton( host, &(sock.sin_addr));
-  sock.sin_port = htons(9002);
-
-  printf("[client] connecting to: %s\n", host );
-  i = connect( sd, (struct sockaddr *)&sock, sizeof(sock) );
-  error_check( i, "client connect");
-
-  return 0;
-}
 
 int client_connect( char *host ) {
   int sd, i;

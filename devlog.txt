@@ -52,6 +52,7 @@ graceS -- 01-18-2017
        - Fix printint ip queue
        - Fix forking issue
        - Working for a specified 3 players
+
 emmaV -- 01-18-2017 19:00
       - GET PLAYER TRUTH TURN TO WORK
       	    - (aka fix loop accidentally starting at i=1....)
@@ -59,5 +60,12 @@ emmaV -- 01-18-2017 19:00
 	    times for it to be muscle memory by now huh
  	 - Recognize stop/repeats corectly
 	 - Do a basic (sorta untested) accuse
+
 emmaV -- 01-19-2017 14:30
       - Basic pile adding fxnality!!
+
+graceS -- 01-22-2017 13:00
+       -Networking is dumb.
+       -I was overcomplicating things, back to the basics.
+       -Simple networking > complex networking
+       -It works! Woooo!!!!!!!!!
