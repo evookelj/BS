@@ -21,9 +21,6 @@ int shuffleDeck(card* deck) {
     deck[i] = deck[r];
     deck[r] = curr;
   }
-  for (i=0; i<52; i++) {
-    printf("Deck[%d]: %d of %s\n", i, deck[i].value, deck[i].type);
-  }
   return 0;
 }
 
@@ -56,7 +53,7 @@ int main() {
   sd = server_setup();
 
   //INSERT ASKING FOR NUMBER OF PLAYERS
-  int expect_players = 2;
+  int expect_players = 3;
   int connections[expect_players];
   int num_players = 0;
 
@@ -64,7 +61,6 @@ int main() {
   card* deck = malloc(sizeof(card) * 52);
   printf("before\n");
   createDeck(deck);
-  free(deck);
 
   //Get players
   while (1) {
@@ -73,28 +69,31 @@ int main() {
     connections[num_players] = connection;
     num_players ++;
 
-    /*
-    int f = fork();
-    if ( f == 0 ) {
-
-      close(sd);
-      sub_server( connection );
-
-      exit(0);
-    }
-    else {
-      close( connection );
-    }
-    */
-    //close(sd);
-    //close(connection);
-    if (num_players == 2) {
+    if (num_players == expect_players) {
       printf("GOT ALL PLAYERS\n");
       break;
     }
   }
 
   //Insert for loop creating player and game structs
+  game* curr_game = malloc(sizeof(game));
+  int num_cards = 52 / num_players;
+  num_cards = 52 / 3;
+  for (i=0; i<num_players; i++) {
+    printf("\ni: %d\n", i);
+    player temp;
+    temp.num_cards = num_cards;
+    printf("temp.num_cards: %d\n", temp.num_cards);
+    printf("num_cards: %d\n", num_cards);
+    int j;
+    for (j=0; j<num_cards; j++) {
+      temp.hand[j] = deck[i*num_cards+j];
+      printf("hand[%d] = deck[%d]\n", j, i*num_cards+j);
+    }
+  }
+  for (i=(num_players-1)*num_cards + (num_cards); i<52; i++) {
+    printf("NEW i: %d\n", i);
+  }
 
   //Play Game
   int player_count;
@@ -110,6 +109,7 @@ int main() {
       }     
     }
   }
+  free(deck);
   return 0;
 }
 
