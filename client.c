@@ -25,6 +25,13 @@ int main( int argc, char *argv[] ) {
   char buffer[MESSAGE_BUFFER_SIZE];
 
   //Write name to server
+  while( read(sd, buffer, sizeof(buffer))) {
+    if(strcmp(buffer, "name") == 0) {
+      write(sd, myName, 30);
+      printf("Wrote name to server\n");
+      break;
+    }
+  }
   
   while (1) {
     printf("enter message: ");

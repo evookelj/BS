@@ -107,7 +107,12 @@ int main() {
   //Get names of players from clients
   for(i = 0; i<num_players; i++) {
     printf("Getting name for player [%d]\n", i);
-    strcpy(curr_game->players[i].name, get_names(connections[i]));
+    write(connections[i], "name", 5);
+    char* n = get_names(connections[i]);
+    printf("Name: %s\n", n);
+    curr_game->players[i].name = n;
+    //strcpy(curr_game->players[i].name, n);
+    printf("Player [%d]: %s\n", i, curr_game->players[i].name);
   }
 
   //Play Game
