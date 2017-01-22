@@ -6,7 +6,7 @@ server: server.o networking.o
 client: client.o networking.o player.o profile.o
 	gcc -o client client.o networking.o player.o profile.o
 
-server.o: server.c networking.h
+server.o: server.c server.h networking.h
 	gcc -c server.c
 
 client.o: client.c networking.h
