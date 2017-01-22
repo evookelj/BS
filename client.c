@@ -25,11 +25,23 @@ int main( int argc, char *argv[] ) {
   char buffer[MESSAGE_BUFFER_SIZE];
 
   //Write name to server
-  while( read(sd, buffer, sizeof(buffer))) {
+  while(read(sd, buffer, sizeof(buffer))) {
     if(strcmp(buffer, "name") == 0) {
       write(sd, myName, 30);
       printf("Wrote name to server\n");
       break;
+    }
+  }
+
+  while(1) {
+    read(sd, buffer, sizeof(buffer));
+
+    if(strcmp(buffer, "turn") == 0) {
+      printf("It's your turn!\n");
+    }
+
+    else if(strcmp(buffer, "notTurn") == 0) {
+      printf("It's not your turn!\n");
     }
   }
   

@@ -84,15 +84,15 @@ int main() {
   int num_cards = 52 / num_players;
   int num_extras = (52 % num_players);
   for (i=0; i<num_players; i++) {
-    printf("\ni: %d\n", i);
+    //printf("\ni: %d\n", i);
     player temp;
     temp.num_cards = num_cards;
-    printf("temp.num_cards: %d\n", temp.num_cards);
-    printf("num_cards: %d\n", num_cards);
+    //printf("temp.num_cards: %d\n", temp.num_cards);
+    //printf("num_cards: %d\n", num_cards);
     int j;
     for (j=0; j<num_cards; j++) {
       temp.hand[j] = deck[i*num_cards+j];
-      printf("hand[%d] = deck[%d]\n", j, i*num_cards+j);
+      //printf("hand[%d] = deck[%d]\n", j, i*num_cards+j);
     }
     curr_game->players[i] = temp;
   }
@@ -111,22 +111,30 @@ int main() {
     char* n = get_names(connections[i]);
     printf("Name: %s\n", n);
     curr_game->players[i].name = n;
-    //strcpy(curr_game->players[i].name, n);
     printf("Player [%d]: %s\n", i, curr_game->players[i].name);
   }
 
   //Play Game
   int player_count;
+  int p;
   while (1) {
-    for(i = 0; i < 2; i++) {
-      for(player_count = 0; player_count < 2; player_count++) {
-	if(connections[player_count] == connections[i]) {
-	  run_turn(connections[i]);
+    for(i = 0; i < num_players; i++) {
+      for (p=0; p<num_players; p++) {
+	if(connections[p] != connections[i]) {
+	  //Send notification to clients that it is not their turn
+	  write(connections[p], "notTurn", 8);
+	  printf("Sent client [%d] 'notTurn'\n", p);
 	}
-	else {
-	  run_BSing(connections[player_count]);
-	}
-      }     
+      }
+      //if(connections[p] == connections[i]) {
+      write(connections[i], "turn", 8);
+      printf("Sent client [%d] 'turn'\n", i);
+      run_turn(connections[i]);
+      for (p=0; p<num_players; p++) {
+	if (connections[p] != connections[i]) {
+	  run_BSing(connections[p]);
+	}     
+      }
     }
   }
   free(deck);
