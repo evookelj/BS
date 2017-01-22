@@ -11,6 +11,8 @@ void sub_server( int sd );
 void run_turn( int sd );
 void run_BSing( int sd );
 char* get_names( int sd );
+//int run_human_turn_server(player* this_player, int curr_val);
+char* get_hand(player *this_player);
 
 int shuffleDeck(card* deck) {
   srand(time(NULL));
@@ -127,6 +129,7 @@ int main() {
 	  printf("Sent client [%d] 'notTurn'\n", p);
 	}
       }
+
       //if(connections[p] == connections[i]) {
       char curr[3];
       sprintf(curr, "%d", curr_val);
@@ -137,10 +140,11 @@ int main() {
       curr_val++;
       if (curr_val == 14) { curr_val = 1; }
       run_turn(connections[i]);
+
       for (p=0; p<num_players; p++) {
 	if (connections[p] != connections[i]) {
 	  run_BSing(connections[p]);
-	}     
+	}
       }
     }
   }
@@ -157,8 +161,11 @@ char* get_names( int sd ) {
   return "";
 }
 
-void run_turn( int sd ) {
+void run_turn( int sd) {
   char buffer[MESSAGE_BUFFER_SIZE];
+
+  //write(sd, get_hand(this_player), sizeof(player->hand));
+  //printf("Sent hand to player\n");
   while (read( sd, buffer, sizeof(buffer) )) {
 
     printf("[SERVER %d] received: %s\n", getpid(), buffer );
@@ -168,6 +175,7 @@ void run_turn( int sd ) {
 }
 
 void run_BSing( int sd ) {
+
   char buffer[MESSAGE_BUFFER_SIZE];
   while (read( sd, buffer, sizeof(buffer) )) {
 
@@ -195,3 +203,46 @@ void process( char * s ) {
     s++;
   }
 }
+/*
+int run_human_turn_server(player* this_player, int curr_val, int sd) {
+
+  write(sd, get_hand(this_player), 128);
+
+}
+
+
+card* get_hand(player *this_player) {
+  int i;
+  card *hand = malloc(sizeof(card) * 52);
+  hand = this_player->hand;
+  return hand;
+}
+
+
+int run_human_turn_server(player* this_player, int curr_val) {
+  printf("\nThe current value in play is %d. The cards you have that fit this are: \n", curr_val);
+  //int count = get_fitting_cards(this_player, curr_val);
+  int count = 0;
+  int* fitting = get_fitting(this_player, curr_val, &count);
+  int play_count;
+  if (count==0) {
+    printf("You have no choice but to BS, as you have no cards of value %d.\n", curr_val);
+    play_count = run_BS(this_player, curr_val);
+  } else {
+    char input[100];
+    printf("\nYour whole deck: \n");
+    print_hand(this_player);
+    printf("Press enter to continue.\n");
+    fgets(input, sizeof(input), stdin);
+    printf("Would you like to BS? (Y/y/N/n)\n");
+    int ans = ask_yn();
+    if(ans) {
+      play_count = run_BS(this_player, curr_val);
+      return play_count;
+    } else {
+      return run_truth_turn(this_player, count, curr_val, fitting);
+    }
+  }
+  return 0;
+}
+*/
