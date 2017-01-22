@@ -70,6 +70,7 @@ int main() {
     num_players ++;
 
     if (num_players == expect_players) {
+      close(sd);
       printf("GOT ALL PLAYERS\n");
       break;
     }
