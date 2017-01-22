@@ -117,6 +117,7 @@ int main() {
   //Play Game
   int player_count;
   int p;
+  int curr_val = 1;
   while (1) {
     for(i = 0; i < num_players; i++) {
       for (p=0; p<num_players; p++) {
@@ -127,8 +128,14 @@ int main() {
 	}
       }
       //if(connections[p] == connections[i]) {
-      write(connections[i], "turn", 8);
-      printf("Sent client [%d] 'turn'\n", i);
+      char curr[3];
+      sprintf(curr, "%d", curr_val);
+      printf("hi\n");
+      char* msg = curr;
+      write(connections[i], msg, 8);
+      printf("Sent client [%d] '%s' \n", i, msg);
+      curr_val++;
+      if (curr_val == 14) { curr_val = 1; }
       run_turn(connections[i]);
       for (p=0; p<num_players; p++) {
 	if (connections[p] != connections[i]) {
