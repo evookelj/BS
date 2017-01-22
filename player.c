@@ -57,6 +57,7 @@ char* login() {
       fgets(input, sizeof(input), stdin);
     }
   }
+  //printf("My name is %s\n", this);
   return this;
 }
 

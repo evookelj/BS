@@ -44,7 +44,7 @@ int createDeck(card* deck) {
     }
   }
   shuffleDeck(deck);
-  return deck;
+  return 0;
 }
 
 int main() {

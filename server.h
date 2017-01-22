@@ -6,6 +6,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <signal.h>
+#include <time.h>
 
 #include "profile.h"
 #include "networking.h"

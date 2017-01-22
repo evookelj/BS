@@ -4,8 +4,11 @@
 #include <unistd.h>
 
 #include "networking.h"
+#include "player.h"
 
 int main( int argc, char *argv[] ) {
+  char *myName = login();
+  printf("My name: %s\n", myName);
 
   char *host;
   if (argc != 2 ) {
