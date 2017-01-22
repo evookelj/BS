@@ -77,8 +77,9 @@ int main() {
 
   //Insert for loop creating player and game structs
   game* curr_game = malloc(sizeof(game));
+  curr_game->players = malloc(sizeof(player) * num_players);
   int num_cards = 52 / num_players;
-  num_cards = 52 / 3;
+  int num_extras = (52 % num_players);
   for (i=0; i<num_players; i++) {
     printf("\ni: %d\n", i);
     player temp;
@@ -90,9 +91,14 @@ int main() {
       temp.hand[j] = deck[i*num_cards+j];
       printf("hand[%d] = deck[%d]\n", j, i*num_cards+j);
     }
+    curr_game->players[i] = temp;
   }
-  for (i=(num_players-1)*num_cards + (num_cards); i<52; i++) {
-    printf("NEW i: %d\n", i);
+  
+  int offset = (num_players-1)*num_cards + (num_cards);
+  curr_game->pile = malloc(sizeof(card) * (52-offset));
+  for (i=0; i<52-offset; i++) {
+    printf("NEW i: %d\n", i+offset);
+    curr_game->pile[i] = deck[i+offset];
   }
 
   //Play Game
