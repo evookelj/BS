@@ -20,6 +20,8 @@ int main( int argc, char *argv[] ) {
   sd = client_connect( host );
 
   char buffer[MESSAGE_BUFFER_SIZE];
+
+  //Write name to server
   
   while (1) {
     printf("enter message: ");

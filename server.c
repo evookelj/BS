@@ -10,6 +10,7 @@ void process( char * s );
 void sub_server( int sd );
 void run_turn( int sd );
 void run_BSing( int sd );
+char* get_names( int sd );
 
 int shuffleDeck(card* deck) {
   srand(time(NULL));
@@ -76,7 +77,8 @@ int main() {
     }
   }
 
-  //Insert for loop creating player and game structs
+  //Create game struct and player structs
+  //Deals out cards to players
   game* curr_game = malloc(sizeof(game));
   curr_game->players = malloc(sizeof(player) * num_players);
   int num_cards = 52 / num_players;
@@ -102,6 +104,12 @@ int main() {
     curr_game->pile[i] = deck[i+offset];
   }
 
+  //Get names of players from clients
+  for(i = 0; i<num_players; i++) {
+    printf("Getting name for player [%d]\n", i);
+    strcpy(curr_game->players[i].name, get_names(connections[i]));
+  }
+
   //Play Game
   int player_count;
   while (1) {
@@ -120,6 +128,14 @@ int main() {
   return 0;
 }
 
+char* get_names( int sd ) {
+  char *buffer = malloc(125);
+  while (read( sd, buffer, sizeof(buffer) )) {
+    printf("[SERVER %d] received: %s\n", getpid(), buffer );
+    return buffer;
+  }
+  return "";
+}
 
 void run_turn( int sd ) {
   char buffer[MESSAGE_BUFFER_SIZE];
