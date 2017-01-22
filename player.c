@@ -100,6 +100,17 @@ void print_hand(player* this_player) {
   }
 }
 
+char* str_hand(player* this_player) {
+  int i;
+  char* ret = "DECK,";
+  for (i=0; i<this_player->num_cards; i++) {
+    char add[10];
+    sprintf(add, "%d %s", this_player->hand[i].value, this_player->hand[i].type);
+    strcat(ret, add);
+  }
+  return ret;
+}
+
 int is_not_dup(int sel[17], int num_cards, int input) {
   int i;
   for (i=0; i<num_cards; i++) {
