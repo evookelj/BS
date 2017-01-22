@@ -4,12 +4,50 @@
 #include <unistd.h>
 
 #include "networking.h"
+#include "server.h"
 
 void process( char * s );
 void sub_server( int sd );
 void run_turn( int sd );
 void run_BSing( int sd );
 
+int shuffleDeck(card* deck) {
+  srand(time(NULL));
+  int count = 52;
+  int i;
+  for (i=0; i<52; i++) {
+    int r = rand() % count;
+    card curr = deck[i];
+    deck[i] = deck[r];
+    deck[r] = curr;
+  }
+  for (i=0; i<52; i++) {
+    printf("Deck[%d]: %d of %s\n", i, deck[i].value, deck[i].type);
+  }
+  return 0;
+}
+
+int createDeck(card* deck) {
+
+  char *suits[] = {
+    "heart",
+    "diamond",
+    "spade",
+    "club"
+  };
+  
+  int i, j;
+  for (i=0; i<4; i++) {
+    for (j=1; j<14; j++) {
+      card temp;
+      temp.type = suits[i];
+      temp.value = (j%14);
+      deck[i*13+j-1] = temp;
+    }
+  }
+  shuffleDeck(deck);
+  return deck;
+}
 
 int main() {
 
@@ -21,6 +59,12 @@ int main() {
   int expect_players = 2;
   int connections[expect_players];
   int num_players = 0;
+
+  int i;
+  card* deck = malloc(sizeof(card) * 52);
+  printf("before\n");
+  createDeck(deck);
+  free(deck);
 
   //Get players
   while (1) {
@@ -53,7 +97,6 @@ int main() {
   //Insert for loop creating player and game structs
 
   //Play Game
-  int i;
   int player_count;
   while (1) {
     for(i = 0; i < 2; i++) {
