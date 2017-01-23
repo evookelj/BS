@@ -177,9 +177,15 @@ char* get_names( int sd ) {
 
 void run_turn( int i, game* curr_game, int sd) {
 
+  //Write deck to client
   int size;
   char* joined = str_hand(curr_game->players[i]);
   write(sd, joined, (curr_game->players[i].num_cards)*200);
+
+  //Read response
+
+  //Update game
+
   //free(joined);
 }
 
