@@ -83,9 +83,10 @@ int main( int argc, char *argv[] ) {
 }
 
 void run_human_turn_client(int curr_val, int sd) {
+  //Get deck of cards
   char buffer[17*200];
   while (1) {
-    sleep(1);
+    //sleep(1);
     int rd = read(sd, buffer, 17*200);
     if (buffer[0] == 'd') {//used so prog knows cards sending
       char* msg;
@@ -109,6 +110,7 @@ void run_human_turn_client(int curr_val, int sd) {
 	printf("val\n");
 	hand[i]->type = new[1];
       }
+      printf("Getting this far\n");
       run_human_turn(hand, size, curr_val);
       free(hand);
       break;
