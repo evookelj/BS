@@ -81,18 +81,24 @@ int main( int argc, char *argv[] ) {
 
 void run_human_turn_client(int curr_val, int sd) {
   printf("\nThe current value in play is %d. The cards you have that fit this are: \n", curr_val);
-  int size = 17*20;
+
+  int size = 17*200;
   char buffer[size];
-  read(sd, buffer, size);
-  if (buffer[0] == 'd') { //used so prog knows cards sending
-    char* msg;
-    strcpy(msg, buffer);
-    printf("Recieved: %s\n", msg);
-    char** hand = split(msg, ",");
-    int i;
-    free(hand);
+  while(1) {
+    read(sd, buffer, size);
+    if (buffer[0] == 'd') { //used so prog knows cards sending
+      printf("Getting cards\n");
+      char* msg;
+      msg = buffer;
+      printf("Recieved: %s\n", msg);
+      char** hand = split(msg, ",");
+      int i;
+      free(hand);
+      break;
+    }
   }
 }
+
 /*
 card hand(int sd) {
   char buffer[MESSAGE_BUFFER_SIZE];
