@@ -85,6 +85,7 @@ int main( int argc, char *argv[] ) {
 void run_human_turn_client(int curr_val, int sd) {
   char buffer[17*200];
   while (1) {
+    sleep(1);
     int rd = read(sd, buffer, 17*200);
     if (buffer[0] == 'd') {//used so prog knows cards sending
       char* msg;
