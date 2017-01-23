@@ -41,7 +41,7 @@ char* create_profile(char* name) {
       return "Account creation failed. Try again";
     }
   }
-
+  free(loc);
   close(fd);
 
   return "";
@@ -72,6 +72,7 @@ profile* get_profile(char* name) {
     return NULL;
   }
   close(fd);
+  free(loc);
   return this;
 }
 
@@ -115,6 +116,7 @@ int update_wl_ratio(char* name, int isWin) {
     return -1;
   }
   printf("Successfully updated win/loss ratio!\n");
+  free(loc);
   return 0;
 }
 

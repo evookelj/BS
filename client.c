@@ -8,6 +8,24 @@
 
 void run_human_turn_client(int curr_val, int sd);
 
+char ** split(char * str, char * delim) {
+  //effectively split str by delim
+  printf("start split\n");
+  char ** ret = (char **) malloc(1000);
+  char *t = str;
+
+  int i = 0;
+  while ( t != NULL ) {
+    printf("i: %d\n", i);
+    ret[i] = strsep(&t, delim);
+    i++;
+  }
+  ret[i] = 0; //null term for both exec and cmd parsing
+
+  printf("Finish splitting\n");
+  return ret;
+}
+
 int main( int argc, char *argv[] ) {
   char *myName = login();
   printf("My name: %s\n", myName);
@@ -63,7 +81,17 @@ int main( int argc, char *argv[] ) {
 
 void run_human_turn_client(int curr_val, int sd) {
   printf("\nThe current value in play is %d. The cards you have that fit this are: \n", curr_val);
-
+  int size = 17*20;
+  char buffer[size];
+  read(sd, buffer, size);
+  if (buffer[0] == 'd') { //used so prog knows cards sending
+    char* msg;
+    strcpy(msg, buffer);
+    printf("Recieved: %s\n", msg);
+    char** hand = split(msg, ",");
+    int i;
+    free(hand);
+  }
 }
 /*
 card hand(int sd) {

@@ -60,7 +60,7 @@ player* get_humans();
 
 //run this player's turn
 //return 0 for success, -1 if something wrong
-void run_turn(int i, game* curr_game);
+void run_turn(int i, game* curr_game, int sd);
 
 //put down cards and make claim
 //to be used by runTurn's thisPlayer

@@ -52,10 +52,11 @@ int createDeck(card* deck) {
 
 char* str_hand(player this_player) {
   int i;
-  char* ret = malloc(this_player.num_cards * 50);
+  char* ret = malloc(this_player.num_cards * 20);
+  strcpy(ret, "d,");
   printf("DECK MADE\n");
   for (i=0; i<this_player.num_cards; i++) {
-    char add[50];
+    char add[20];
     char* type = this_player.hand[i].type;
     int val = this_player.hand[i].value;
     sprintf(add, "%d %s,", val, type);
@@ -65,20 +66,6 @@ char* str_hand(player this_player) {
   }
   printf("Done joining\n");
   return ret;
-}
-
-char ** split(char * str, char * delim, int* size) {
-  //effectively split str by delim
-  printf("Start splitting\n");
-  char **command = (char**)malloc(100);
-  int i = 0;
-  while((command[i] = strsep(&str, delim)))
-    i++;
-  command[i] = 0;
-  *(size) = i;
-
-  printf("Finish splitting\n");
-  return command;
 }
 
 int main() {
@@ -146,6 +133,7 @@ int main() {
     printf("Name: %s\n", n);
     curr_game->players[i].name = n;
     printf("Player [%d]: %s\n", i, curr_game->players[i].name);
+    free(n);
   }
 
   //Play Game
@@ -170,7 +158,7 @@ int main() {
       printf("Sent client [%d] '%s' \n", i, msg);
       curr_val++;
       if (curr_val == 14) { curr_val = 1; }
-      run_turn(i, curr_game);
+      run_turn(i, curr_game, connections[i]);
 
       for (p=0; p<num_players; p++) {
 	if (connections[p] != connections[i]) {
@@ -180,6 +168,9 @@ int main() {
     }
   }
   free(deck);
+  free(curr_game->players);
+  free(curr_game->pile);
+  free(curr_game);
   return 0;
 }
 
@@ -192,29 +183,13 @@ char* get_names( int sd ) {
   return "";
 }
 
-void run_turn( int i, game* curr_game) {
+void run_turn( int i, game* curr_game, int sd) {
 
   int size;
   char* joined = str_hand(curr_game->players[i]);
-  char** sep = split(joined, ",", &size);
-  for (i=0; i<size; i++) {
-    printf("%s\n", sep[i]);
-  }
-  
-  /*
-  int sd = connections[i];
-  
-  char buffer[MESSAGE_BUFFER_SIZE];
-  
-  //write(sd, get_hand(this_player), sizeof(player->hand));
-  //printf("Sent hand to player\n");
-  while (read( sd, buffer, sizeof(buffer) )) {
-
-    printf("[SERVER %d] received: %s\n", getpid(), buffer );
-    process( buffer );
-    write( sd, buffer, sizeof(buffer));    
-  }
-  */
+  write(sd, joined, curr_game->players[i].num_cards*20);
+  printf("Send cards to client\n");
+  free(joined);
 }
 
 void run_BSing( int sd ) {
