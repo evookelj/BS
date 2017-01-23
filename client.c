@@ -85,42 +85,34 @@ int main( int argc, char *argv[] ) {
 void run_human_turn_client(int curr_val, int sd) {
   //Get deck of cards
   char buffer[17*200];
-  //while (1) {
-    //sleep(1);
-    int rd = read(sd, buffer, 17*200);
-    if (buffer[0] == 'd') {//used so prog knows cards sending
-      write(sd, "gotDeck", 8);
-      printf("Sent 'gotDeck' to server\n");
-      char* msg;
-      msg = buffer;
-      printf("Recieved: %s\n", msg);
-      int size;
-      char** hand_str = split(msg, ",", &size, 1);
-      card** hand = malloc(sizeof(card*) * 17);
-      int i;
-      printf("size: %d\n", size);
-      int placeholder;
-      char** new;
-      for (i=0; i<size; i++) {
-	//	printf("hand_str[%d]: %s\n", i, hand_str[i]);
-	new = split(hand_str[i], " ", &placeholder, 0);
-	//printf("new[0]: %s\nnew[1]: %s\n", new[0], new[1]);
-	int ind = (int)strtol(new[0], (char**)NULL, 10);
-	//printf("ind: %d\n", ind);
-	hand[i] = malloc(sizeof(card));
-	hand[i]->value = ind;
-	//printf("val\n");
-	hand[i]->type = new[1];
-      }
-      //printf("Getting this far\n");
-      run_human_turn(hand, size, curr_val);
-      free(hand);
-      //break;
+  int rd = read(sd, buffer, 17*200);
+  if (buffer[0] == 'd') {//used so prog knows cards sending
+    write(sd, "gotDeck", 8);
+    printf("Sent 'gotDeck' to server\n");
+    char* msg;
+    msg = buffer;
+    printf("Recieved: %s\n", msg);
+    int size;
+    char** hand_str = split(msg, ",", &size, 1);
+    card** hand = malloc(sizeof(card*) * 17);
+    int i;
+    printf("size: %d\n", size);
+    int placeholder;
+    char** new;
+    for (i=0; i<size; i++) {
+      new = split(hand_str[i], " ", &placeholder, 0);
+      int ind = (int)strtol(new[0], (char**)NULL, 10);
+      hand[i] = malloc(sizeof(card));
+      hand[i]->value = ind;
+      hand[i]->type = new[1];
     }
-    else {
-      printf("No d\n");
-      run_human_turn_client(curr_val, sd);
-      //break;
-    }
-    //}
+    char* played = run_human_turn(hand, size, curr_val);
+    printf("played: %s\n", played);
+    free(played);
+    free(hand);
+  }
+  else {
+    printf("Trying to get deck...\n");
+    run_human_turn_client(curr_val, sd);
+  }
 }

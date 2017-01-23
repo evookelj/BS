@@ -134,8 +134,9 @@ char* run_BS(card** hand, int size, int curr_val) {
   int sel[size];
   int count = 0;
   char input[20];
-  char* ret;
-  card** picked = malloc(sizeof(card*) * size);
+  char* ret = malloc(size*15);
+  ret[0] = 'd';
+  ret[1] = ',';
   while (cont) {
     fgets(input, sizeof(input), stdin);
     int ind = (int)strtol(input, (char **)NULL, 10);
@@ -163,9 +164,6 @@ char* run_BS(card** hand, int size, int curr_val) {
 	    printf("SPRINTED\n");
 	    strcat(ret, add);
 	    printf("CATTED\n");
-	    //picked[count] = malloc(sizeof(card));
-	    //picked[count]->value = hand[sel[i]]->value;
-	    //picked[count]->type = hand[sel[i]]->type;
 	  }
 	  cont = 0;
 	}
@@ -174,8 +172,8 @@ char* run_BS(card** hand, int size, int curr_val) {
       }
     }
   }
+  printf("ret: %s\n", ret);
   return ret;
-  //return str_hand(picked, count);
 }
 
 int* get_fitting(card** hand, int size, int curr_val, int* count) {
@@ -197,8 +195,11 @@ int* get_fitting(card** hand, int size, int curr_val, int* count) {
   return ret;
 }
 
-int run_truth_turn(card** hand, int size, int count, int curr_val, int* fitting) {
+char* run_truth_turn(card** hand, int size, int count, int curr_val, int* fitting) {
   char input[30];
+  char* ret = malloc(size*15);
+  ret[0] = 'd';
+  ret[1] = ',';
   if (count==1) {
     printf("You only have one card of value %d, so you must play that. Press enter to continue.\n", curr_val);
     fgets(input, sizeof(input), stdin);
@@ -211,14 +212,15 @@ int run_truth_turn(card** hand, int size, int count, int curr_val, int* fitting)
     while (cont) {
       fgets(input, sizeof(input), stdin);
       int ind = (int)strtol(input, (char **)NULL, 10);
-      printf("ind: %d\n", ind);
       if (ind > 0 && ind <= count) {
 	ind -= 1;
-	printf("fitting[%d]: %d\n", ind, fitting[ind]);
 	if (is_not_dup(sel, cntSel, fitting[ind])) {
-	  printf("hand[%d]: %d of %s\n\n", fitting[ind], hand[fitting[ind]]->value, hand[fitting[ind]]->type);
+	  printf("hand[%d]: %d of %s\n\n", fitting[ind]+1, hand[fitting[ind]]->value, hand[fitting[ind]]->type);
 	  sel[cntSel] = fitting[ind];
 	  cntSel++;
+	  char add[15];
+	  sprintf(add, "%d %s,", hand[fitting[ind]]->value, hand[fitting[ind]]->type);
+	  strcat(ret, add);
 	  if (cntSel==count) {
 	    printf("You have selected all possible choices. On we go!\n");
 	    cont = 0;
@@ -244,7 +246,8 @@ int run_truth_turn(card** hand, int size, int count, int curr_val, int* fitting)
       }
     }
   }
-  return 0;
+  printf("truth ret: %s\n", ret);
+  return ret;
 }
 
 int ask_yn() {
@@ -264,13 +267,13 @@ int ask_yn() {
 }
 
 //return 0 for BS'ing, 1 for truth'ing
-int run_human_turn(card** hand, int size, int curr_val) {
+char* run_human_turn(card** hand, int size, int curr_val) {
   printf("\nThe current value in play is %d. The cards you have that fit this are: \n", curr_val);
   int count = 0;
   int* fitting = get_fitting(hand, size, curr_val, &count);
   if (count==0) {
     printf("You have no choice but to BS, as you have no cards of value %d.\n", curr_val);
-    run_BS(hand, size, curr_val);
+    return run_BS(hand, size, curr_val);
   } else {
     char input[100];
     printf("\nYour whole deck: \n");
@@ -280,11 +283,9 @@ int run_human_turn(card** hand, int size, int curr_val) {
     printf("Would you like to BS? (Y/y/N/n)\n");
     int ans = ask_yn();
     if(ans) {
-      run_BS(hand, size, curr_val);
-      return 0;
+      return run_BS(hand, size, curr_val);
     } else {
-      run_truth_turn(hand, size, count, curr_val, fitting);
-      return 0;
+      return run_truth_turn(hand, size, count, curr_val, fitting);
     }
   }
   return 0;

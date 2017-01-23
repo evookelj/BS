@@ -54,7 +54,6 @@ char* str_hand(player this_player) {
   int i;
   char* ret = malloc(this_player.num_cards * 20);
   strcpy(ret, "d,");
-  printf("DECK MADE\n");
   for (i=0; i<this_player.num_cards; i++) {
     char add[20];
     char* type = this_player.hand[i].type;
@@ -176,26 +175,22 @@ char* get_names( int sd ) {
 }
 
 void run_turn( int i, game* curr_game, int sd) {
-
   //Write deck to client
- int size;
- char* joined = str_hand(curr_game->players[i]);
- char buffer[8];
-  while(1) {
-       write(sd, joined, (curr_game->players[i].num_cards)*200);
-       printf("Sent deck of cards\n");
-       read(sd, buffer, 8);
-       if(strcmp(buffer, "gotDeck") == 0) {
-	 printf("Recieved gotDeck\n");
-	 break;
-       }
+  int size;
+  char* joined = str_hand(curr_game->players[i]);
+  char buffer[8];
+  write(sd, joined, (curr_game->players[i].num_cards)*200);
+  read(sd, buffer, 8);
+  while (1) {
+    if(strcmp(buffer, "gotDeck") == 0) {
+      printf("Recieved gotDeck\n");
+      break;
+    } else {
+      printf("Trying to send deck...\n");
+      run_turn(i, curr_game, sd);
+      break;
+    }
   }
-
-  //Read response
-
-  //Update game
-
-  //free(joined);
 }
 
 void run_BSing( int sd ) {
