@@ -99,14 +99,21 @@ void print_hand(card** hand, int size) {
   }
 }
 
-char* str_hand(player* this_player) {
+char* str_hand(card** hand, int size) {
+  printf("STARTING STR HAND\n");
   int i;
   char* ret = "DECK,";
-  for (i=0; i<this_player->num_cards; i++) {
+  for (i=0; i<size; i++) {
     char add[10];
-    sprintf(add, "%d %s", this_player->hand[i].value, this_player->hand[i].type);
+    printf("start of loop\n");
+    printf("hand mem: %d\n", hand[i]->value);
+    printf("hand[%d]: %d %s\n", i, hand[i]->value, hand[i]->type);
+    sprintf(add, "%d %s", hand[i]->value, hand[i]->type);
+    printf("sprintf done\n");
     strcat(ret, add);
+    printf("ADDING CARD %d\n", i);
   }
+  printf("PRINTED STR HAND\n");
   return ret;
 }
 
@@ -121,17 +128,20 @@ int is_not_dup(int sel[17], int num_cards, int input) {
   return 1;
 }
 
-int run_BS(card** hand, int size, int curr_val) {
+char* run_BS(card** hand, int size, int curr_val) {
   printf("To pick cards to put down, enter the index as listed in your printed deck (from 1 to %d) and press enter. Enter 'S/s' to stop after selecting at least one card.\n", size);
   int cont = 1;
   int sel[size];
   int count = 0;
   char input[20];
+  char* ret;
+  card** picked = malloc(sizeof(card*) * size);
   while (cont) {
     fgets(input, sizeof(input), stdin);
     int ind = (int)strtol(input, (char **)NULL, 10);
     printf("ind: %d\n", ind);
     if (ind > 0 && ind < size) {
+      ind -= 1;
       if (is_not_dup(sel, size, ind)) {
 	sel[count] = ind;
 	count++;
@@ -148,6 +158,14 @@ int run_BS(card** hand, int size, int curr_val) {
 	  int i;
 	  for (i=0; i<count; i++) {
 	    printf("%d of %s\n", hand[sel[i]]->value, hand[sel[i]]->type);
+	    char add[15];
+	    sprintf(add, "%d %s,", hand[sel[i]]->value, hand[sel[i]]->type);
+	    printf("SPRINTED\n");
+	    strcat(ret, add);
+	    printf("CATTED\n");
+	    //picked[count] = malloc(sizeof(card));
+	    //picked[count]->value = hand[sel[i]]->value;
+	    //picked[count]->type = hand[sel[i]]->type;
 	  }
 	  cont = 0;
 	}
@@ -156,7 +174,8 @@ int run_BS(card** hand, int size, int curr_val) {
       }
     }
   }
-  return count;
+  return ret;
+  //return str_hand(picked, count);
 }
 
 int* get_fitting(card** hand, int size, int curr_val, int* count) {

@@ -183,6 +183,7 @@ void run_turn( int i, game* curr_game, int sd) {
  char buffer[8];
   while(1) {
        write(sd, joined, (curr_game->players[i].num_cards)*200);
+       printf("Sent deck of cards\n");
        read(sd, buffer, 8);
        if(strcmp(buffer, "gotDeck") == 0) {
 	 printf("Recieved gotDeck\n");

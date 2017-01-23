@@ -90,6 +90,7 @@ void run_human_turn_client(int curr_val, int sd) {
     int rd = read(sd, buffer, 17*200);
     if (buffer[0] == 'd') {//used so prog knows cards sending
       write(sd, "gotDeck", 8);
+      printf("Sent 'gotDeck' to server\n");
       char* msg;
       msg = buffer;
       printf("Recieved: %s\n", msg);
@@ -101,17 +102,17 @@ void run_human_turn_client(int curr_val, int sd) {
       int placeholder;
       char** new;
       for (i=0; i<size; i++) {
-	printf("hand_str[%d]: %s\n", i, hand_str[i]);
+	//	printf("hand_str[%d]: %s\n", i, hand_str[i]);
 	new = split(hand_str[i], " ", &placeholder, 0);
-	printf("new[0]: %s\nnew[1]: %s\n", new[0], new[1]);
+	//printf("new[0]: %s\nnew[1]: %s\n", new[0], new[1]);
 	int ind = (int)strtol(new[0], (char**)NULL, 10);
-	printf("ind: %d\n", ind);
+	//printf("ind: %d\n", ind);
 	hand[i] = malloc(sizeof(card));
 	hand[i]->value = ind;
-	printf("val\n");
+	//printf("val\n");
 	hand[i]->type = new[1];
       }
-      printf("Getting this far\n");
+      //printf("Getting this far\n");
       run_human_turn(hand, size, curr_val);
       free(hand);
       break;
