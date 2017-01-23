@@ -60,12 +60,8 @@ char* str_hand(player this_player) {
     char* type = this_player.hand[i].type;
     int val = this_player.hand[i].value;
     sprintf(add, "%d %s,", val, type);
-    printf("adding\n");
     strcat(ret, add);
-    printf("added\n");
   }
-  printf("Done joining\n");
-  //printf("Hand: %s", ret);
   return ret;
 }
 
@@ -82,7 +78,6 @@ int main() {
 
   int i;
   card* deck = malloc(sizeof(card) * 52);
-  printf("before\n");
   createDeck(deck);
 
   //Get players
@@ -106,15 +101,11 @@ int main() {
   int num_cards = 52 / num_players;
   int num_extras = (52 % num_players);
   for (i=0; i<num_players; i++) {
-    //printf("\ni: %d\n", i);
     player temp;
     temp.num_cards = num_cards;
-    //printf("temp.num_cards: %d\n", temp.num_cards);
-    //printf("num_cards: %d\n", num_cards);
     int j;
     for (j=0; j<num_cards; j++) {
       temp.hand[j] = deck[i*num_cards+j];
-      //printf("hand[%d] = deck[%d]\n", j, i*num_cards+j);
     }
     curr_game->players[i] = temp;
   }
@@ -189,7 +180,6 @@ void run_turn( int i, game* curr_game, int sd) {
   int size;
   char* joined = str_hand(curr_game->players[i]);
   write(sd, joined, (curr_game->players[i].num_cards)*200);
-  printf("Send cards to client\n");
   //free(joined);
 }
 

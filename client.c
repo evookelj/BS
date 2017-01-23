@@ -8,14 +8,13 @@
 
 void run_human_turn_client(int curr_val, int sd);
 
-char ** split(char * str, char * delim, int * size) {
+char ** split(char * str, char * delim, int * size, int skip_first) {
   //effectively split str by delim
-  printf("start split\n");
   char ** ret = (char **) malloc(1000);
   char *t = str;
 
   int i = 0;
-  int first = 1;
+  int first = skip_first;
   while ( t != NULL ) {
     if (first) {
       strsep(&t, delim);
@@ -27,8 +26,6 @@ char ** split(char * str, char * delim, int * size) {
   }
   *(size) = i-1;
   ret[i] = 0; //null term for both exec and cmd parsing
-
-  printf("Finish splitting\n");
   return ret;
 }
 
@@ -86,33 +83,32 @@ int main( int argc, char *argv[] ) {
 }
 
 void run_human_turn_client(int curr_val, int sd) {
-  printf("\nThe current value in play is %d. The cards you have that fit this are: \n", curr_val);
-
-  int size = 17*200;
-  char buffer[size];
-  while(1) {
-    read(sd, buffer, size);
-    if (buffer[0] == 'd') { //used so prog knows cards sending
-      printf("Getting cards\n");
+  char buffer[17*200];
+  while (1) {
+    int rd = read(sd, buffer, 17*200);
+    if (buffer[0] == 'd') {//used so prog knows cards sending
       char* msg;
       msg = buffer;
       printf("Recieved: %s\n", msg);
       int size;
-      char** hand = split(msg, ",", &size);
+      char** hand_str = split(msg, ",", &size, 0);
+      card** hand = malloc(sizeof(card) * 17);
       int i;
       printf("size: %d\n", size);
+      int placeholder;
+      char** new;
       for (i=0; i<size; i++) {
-	printf("hand[%d]: %s\n", i, hand[i]);
+	printf("hand_str[%d]: %s\n", i, hand_str[i]);
+	new = split(hand_str[i], " ", &placeholder, 0);
+	int ind = (int)strtol(new[0], (char**)NULL, 10);
+	printf("ind: %d\n", ind);
+	hand[i]->value = ind;
+	printf("val\n");
+	hand[i]->type = new[1];
       }
+      run_human_turn(hand, size, curr_val);
       free(hand);
       break;
     }
   }
 }
-
-/*
-card hand(int sd) {
-  char buffer[MESSAGE_BUFFER_SIZE];
-  while(read( sd, buffer, sizeof(buffer) ){
-      return buffer;
-*/

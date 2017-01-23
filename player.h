@@ -17,4 +17,6 @@ void rules();
 //returns 1 if yes, 0 if no
 int ask_yn();
 
+int run_human_turn(card** hand, int size, int curr_val);
+
 #endif

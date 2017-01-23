@@ -10,7 +10,7 @@
 
 #include "profile.h"
 #include "networking.h"
-#include "player.h"
+//#include "player.h"
 
 //=====================STRUCTS=====================
 struct card_struct {

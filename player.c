@@ -86,17 +86,16 @@ void rules() {
   }
 }
 
-int add_card(player* this_player, card* to_add) {
-  printf("%d of %s\n",to_add->value, to_add->type);
-  this_player->hand[this_player->num_cards] = *(to_add);
-  this_player->num_cards++;
+int add_card(card** hand, int * size, card* to_add) {
+  hand[*(size)] = to_add;
+  *(size) += 1;
   return 0;
 }
 
-void print_hand(player* this_player) {
+void print_hand(card** hand, int size) {
   int i;
-  for (i=0; i<this_player->num_cards; i++) {
-    printf("Hand at %d: %d of %s\n", i+1, this_player->hand[i].value, this_player->hand[i].type);
+  for (i=0; i<size; i++) {
+    printf("Hand at %d: %d of %s\n", i+1, hand[i]->value, hand[i]->type);
   }
 }
 
@@ -122,19 +121,18 @@ int is_not_dup(int sel[17], int num_cards, int input) {
   return 1;
 }
 
-int run_BS(player* this_player, int curr_val) {
-  update_bs_ratio(this_player->name, 1, 1);
-  printf("To pick cards to put down, enter the index as listed in your printed deck (from 1 to %d) and press enter. Enter 'S/s' to stop after selecting at least one card.\n", this_player->num_cards-1);
+int run_BS(card** hand, int size, int curr_val) {
+  printf("To pick cards to put down, enter the index as listed in your printed deck (from 1 to %d) and press enter. Enter 'S/s' to stop after selecting at least one card.\n", size);
   int cont = 1;
-  int sel[this_player->num_cards];
+  int sel[size];
   int count = 0;
   char input[20];
   while (cont) {
     fgets(input, sizeof(input), stdin);
     int ind = (int)strtol(input, (char **)NULL, 10);
     printf("ind: %d\n", ind);
-    if (ind > 0 && ind < this_player->num_cards) {
-      if (is_not_dup(sel, this_player->num_cards, ind)) {
+    if (ind > 0 && ind < size) {
+      if (is_not_dup(sel, size, ind)) {
 	sel[count] = ind;
 	count++;
       } else {
@@ -149,25 +147,25 @@ int run_BS(player* this_player, int curr_val) {
 	  printf("Great! You have selected to put down the following cards and claim them as %d's.\n", curr_val);
 	  int i;
 	  for (i=0; i<count; i++) {
-	    printf("%d of %s\n", this_player->hand[sel[i]].value, this_player->hand[sel[i]].type);
+	    printf("%d of %s\n", hand[sel[i]]->value, hand[sel[i]]->type);
 	  }
 	  cont = 0;
 	}
       } else {
-	printf("Invalid input. Try again (from 1 to %d) or enter S/s to stop.\n", this_player->num_cards-1);
+	printf("Invalid input. Try again (from 1 to %d) or enter S/s to stop.\n", size);
       }
     }
   }
   return count;
 }
 
-int* get_fitting(player* this_player, int curr_val, int* count) {
+int* get_fitting(card** hand, int size, int curr_val, int* count) {
   static int ret[17];
   int i;
   int cnt = 0;
-  for (i=0; i<this_player->num_cards; i++) {
-    if (this_player->hand[i].value == curr_val) {
-      printf("index %d: %d of %s\n", cnt+1, this_player->hand[i].value, this_player->hand[i].type);
+  for (i=0; i<size; i++) {
+    if (hand[i]->value == curr_val) {
+      printf("index %d: %d of %s\n", cnt+1, hand[i]->value, hand[i]->type);
       ret[cnt] = i;
       cnt++;
     }
@@ -180,8 +178,7 @@ int* get_fitting(player* this_player, int curr_val, int* count) {
   return ret;
 }
 
-int run_truth_turn(player* this_player, int count, int curr_val, int* fitting) {
-  update_bs_ratio(this_player->name, 0, 1);
+int run_truth_turn(card** hand, int size, int count, int curr_val, int* fitting) {
   char input[30];
   if (count==1) {
     printf("You only have one card of value %d, so you must play that. Press enter to continue.\n", curr_val);
@@ -200,7 +197,7 @@ int run_truth_turn(player* this_player, int count, int curr_val, int* fitting) {
 	ind -= 1;
 	printf("fitting[%d]: %d\n", ind, fitting[ind]);
 	if (is_not_dup(sel, cntSel, fitting[ind])) {
-	  printf("hand[%d]: %d of %s\n\n", fitting[ind], this_player->hand[fitting[ind]].value, this_player->hand[fitting[ind]].type);
+	  printf("hand[%d]: %d of %s\n\n", fitting[ind], hand[fitting[ind]]->value, hand[fitting[ind]]->type);
 	  sel[cntSel] = fitting[ind];
 	  cntSel++;
 	  if (cntSel==count) {
@@ -218,7 +215,7 @@ int run_truth_turn(player* this_player, int count, int curr_val, int* fitting) {
 	    printf("Great! You have selected to put down the following cards:\n");
 	    int i;
 	    for (i=0; i<cntSel; i++) {
-	      printf("%d of %s\n", this_player->hand[sel[i]].value, this_player->hand[sel[i]].type);
+	      printf("%d of %s\n", hand[sel[i]]->value, hand[sel[i]]->type);
 	    }
 	    cont = 0;
 	  }
@@ -248,33 +245,33 @@ int ask_yn() {
 }
 
 //return 0 for BS'ing, 1 for truth'ing
-int run_human_turn(player* this_player, int curr_val) {
+int run_human_turn(card** hand, int size, int curr_val) {
   printf("\nThe current value in play is %d. The cards you have that fit this are: \n", curr_val);
-  //int count = get_fitting_cards(this_player, curr_val);
   int count = 0;
-  int* fitting = get_fitting(this_player, curr_val, &count);
-  int play_count;
+  int* fitting = get_fitting(hand, size, curr_val, &count);
   if (count==0) {
     printf("You have no choice but to BS, as you have no cards of value %d.\n", curr_val);
-    play_count = run_BS(this_player, curr_val);
+    run_BS(hand, size, curr_val);
   } else {
     char input[100];
     printf("\nYour whole deck: \n");
-    print_hand(this_player);
+    print_hand(hand, size);
     printf("Press enter to continue.\n");
     fgets(input, sizeof(input), stdin);
     printf("Would you like to BS? (Y/y/N/n)\n");
     int ans = ask_yn();
     if(ans) {
-      play_count = run_BS(this_player, curr_val);
-      return play_count;
+      run_BS(hand, size, curr_val);
+      return 0;
     } else {
-      return run_truth_turn(this_player, count, curr_val, fitting);
+      run_truth_turn(hand, size, count, curr_val, fitting);
+      return 0;
     }
   }
   return 0;
 }
 
+/*
 int run_human_accuse(player* this_player, player* last_player, card** pile, int pile_size, int num_cards_from_turn, int curr_val, int is_bs) {
   printf("Would you like to accuse %s of BS'ing their %d %d's? (Y/y/N/n)\n", last_player->name, num_cards_from_turn, curr_val);
   int to_accuse = ask_yn();
@@ -299,6 +296,7 @@ int run_human_accuse(player* this_player, player* last_player, card** pile, int 
   }
   return 0;
 }
+*/
 /*
 int main() {
   player* grace = malloc(sizeof(player));
