@@ -188,7 +188,6 @@ void run_turn( int i, game* curr_game, int sd) {
 
   int size;
   char* joined = str_hand(curr_game->players[i]);
-  printf("Hand: %s\n", joined);
   write(sd, joined, (curr_game->players[i].num_cards)*200);
   printf("Send cards to client\n");
   //free(joined);

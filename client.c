@@ -8,18 +8,24 @@
 
 void run_human_turn_client(int curr_val, int sd);
 
-char ** split(char * str, char * delim) {
+char ** split(char * str, char * delim, int * size) {
   //effectively split str by delim
   printf("start split\n");
   char ** ret = (char **) malloc(1000);
   char *t = str;
 
   int i = 0;
+  int first = 1;
   while ( t != NULL ) {
-    printf("i: %d\n", i);
-    ret[i] = strsep(&t, delim);
-    i++;
+    if (first) {
+      strsep(&t, delim);
+      first = 0;
+    } else {
+      ret[i] = strsep(&t, delim);
+      i++;
+    }
   }
+  *(size) = i-1;
   ret[i] = 0; //null term for both exec and cmd parsing
 
   printf("Finish splitting\n");
@@ -91,8 +97,13 @@ void run_human_turn_client(int curr_val, int sd) {
       char* msg;
       msg = buffer;
       printf("Recieved: %s\n", msg);
-      char** hand = split(msg, ",");
+      int size;
+      char** hand = split(msg, ",", &size);
       int i;
+      printf("size: %d\n", size);
+      for (i=0; i<size; i++) {
+	printf("hand[%d]: %s\n", i, hand[i]);
+      }
       free(hand);
       break;
     }
