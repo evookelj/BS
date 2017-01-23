@@ -178,9 +178,17 @@ char* get_names( int sd ) {
 void run_turn( int i, game* curr_game, int sd) {
 
   //Write deck to client
-  int size;
-  char* joined = str_hand(curr_game->players[i]);
-  write(sd, joined, (curr_game->players[i].num_cards)*200);
+ int size;
+ char* joined = str_hand(curr_game->players[i]);
+ char buffer[8];
+  while(1) {
+       write(sd, joined, (curr_game->players[i].num_cards)*200);
+       read(sd, buffer, 8);
+       if(strcmp(buffer, "gotDeck") == 0) {
+	 printf("Recieved gotDeck\n");
+	 break;
+       }
+  }
 
   //Read response
 
