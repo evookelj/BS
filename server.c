@@ -190,16 +190,25 @@ char* get_names( int sd ) {
 void remove_card(game* curr_game, int i, int newVal, char* newType) {
   int j;
   int found = 0;
+  if (curr_game->players[i].num_cards==1 &&
+      curr_game->players[i].hand[i].value == newVal &&
+      !strcmp(curr_game->players[i].hand[i].type, newType)) {
+    curr_game->players[i].hand->type = "";
+    curr_game->players[i].hand->value = 0;
+    return;
+  }
   for (j=0; j<curr_game->players[i].num_cards; j++) {
     if (curr_game->players[i].hand[j].value == newVal && //same val and type
 	!strcmp(curr_game->players[i].hand[j].type, newType) &&
 	!found) { //hasn't already been found
       found = 1;
     }
-    if (found && j<(curr_game->players[i].num_cards)) { //found + valid range
+    if (found && j<(curr_game->players[i].num_cards)-1) { //found + valid range
       //shift all values one to the right (starting at the one u found bc that needs to be overwritten
-      curr_game->players[i].hand[j-1].value = curr_game->players[i].hand[j].value;
-      curr_game->players[i].hand[j-1].type = curr_game->players[i].hand[j].type;
+      printf("before: %d of %s\n", curr_game->players[i].hand[j].value,curr_game->players[i].hand[j].type);
+      curr_game->players[i].hand[j].value = curr_game->players[i].hand[j+1].value;
+      curr_game->players[i].hand[j].type = curr_game->players[i].hand[j+1].type;
+      printf("after: %d of %s\n\n", curr_game->players[i].hand[j].value,curr_game->players[i].hand[j].type);
     }
   }
   curr_game->players[i].num_cards -= 1; //lower num_cards
@@ -257,7 +266,7 @@ void run_turn( int i, game* curr_game, int sd) {
       for (j=0; j<num_played; j++) {
 	printf("played[%d]: %s\n", j, cards_played[j]);
       }
-      printf("Before 'after_turn\n");
+      printf("Before 'after_turn'\n");
       after_turn(curr_game, i, cards_played, num_played);
       printf("After 'after_turn\n");
       for (j=0; j<curr_game->pile_size; j++) {
