@@ -80,3 +80,5 @@ emmaV & graceS -- 01-22-2017 10:00 --> 01-23-2017 <tbd>
       - Fix recurring error that began in class after a solid 7 hours
       - Finish run turn!
       - Start to implement accuse
+      - Implement networking for accuse
+      - Implement client accuse and server accuse
