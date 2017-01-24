@@ -68,6 +68,7 @@ int main( int argc, char *argv[] ) {
       sprintf(res, "%d", result);
       write(sd, res, sizeof(res));
       printf("Sending accuse result..\n");
+      buffer[0] = 'E';
     }
   }
 
