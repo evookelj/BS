@@ -287,90 +287,23 @@ char* run_human_turn(card** hand, int size, int curr_val) {
   return 0;
 }
 
-/*
-int run_human_accuse(player* this_player, player* last_player, card** pile, int pile_size, int num_cards_from_turn, int curr_val, int is_bs) {
-  printf("Would you like to accuse %s of BS'ing their %d %d's? (Y/y/N/n)\n", last_player->name, num_cards_from_turn, curr_val);
+int run_human_accuse(char* this_player, char* last_player, int num_cards_from_turn, int curr_val, int is_bs) {
+  printf("Would you like to accuse %s of BS'ing their %d %d's? (Y/y/N/n)\n", last_player, num_cards_from_turn, curr_val);
   int to_accuse = ask_yn();
   if (to_accuse) {
-    printf("Okay, you have accused %s of BS'ing aaaaand... (Enter to continue)\n", last_player->name);
+    printf("Okay, you have accused %s of BS'ing aaaaand... (Enter to continue)\n", last_player);
     char input[2];
     int i;
     fgets(input, sizeof(input), stdin);
     if (is_bs) {
-      printf("You were correct! %s now has to take the pile.\n", last_player->name);
-      for (i=0; i<pile_size; i++) {
-	add_card(last_player, pile[i]);
-      }
+      printf("You were correct! %s now has to take the pile.\n", last_player);
+      //send msg to indicate
     } else {
       printf("You were wrong :( and now have to take the pile.\n");
-      for (i=0; i<pile_size; i++) {
-	add_card(this_player, pile[i]);
-      }
+      //send msg to indicate
     }
   } else {
     printf("Okay, moving on then...\n");
   }
   return 0;
 }
-*/
-/*
-int main() {
-  player* grace = malloc(sizeof(player));
-  player* emma = malloc(sizeof(player));
-  emma->name = "emma";
-  emma->num_cards = 0;
-  grace->name = "grace";
-  grace->num_cards = 0;
-  
-  card** pile = calloc(sizeof(card), 12);
-  int p_size = 0;
-  
-  int i;
-  for (i=1; i<4; i++) {
-    card* add = malloc(sizeof(card));
-    
-    add->type = "diamond";
-    add->value = i;
-    add_card(emma, add);
-
-    add->type = "club";
-    add->value = i;
-    add_card(grace, add);
-
-    pile[p_size] = malloc(sizeof(card));
-    *(pile[p_size]) = *(add);
-    p_size++;
-    
-    free(add);
-  }
-  for (i=1; i<4; i++) {
-    card* add = malloc(sizeof(card));
-    
-    add->type = "heart";
-    add->value = i;
-    add_card(emma, add);
-
-    add->type = "spade";
-    add->value = i+4;
-    add_card(grace, add);
-
-    free(add);
-  }
-  for (i=3; i<7; i++) {
-    card* add = malloc(sizeof(card));
-    add->type = "spade";
-    add->value = i;
-    add_card(emma, add);
-
-    free(add);
-
-  }
-  //run_human_turn(emma, 3);
-  //run_human_accuse(grace, emma, NULL, 0, 2, 3, 1);
-  run_human_accuse(grace, emma, pile, p_size, 2, 3, 0);
-
-  print_hand(grace);
-  return 0;
-}
-*/
-

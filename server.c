@@ -10,7 +10,7 @@
 void process( char * s );
 void sub_server( int sd );
 //void run_turn( int sd );
-void run_BSing( int sd );
+void run_BSing(int sd, game* curr_game, int accuser, int accused);
 char* get_names( int sd );
 //int run_human_turn_server(player* this_player, int curr_val);
 char* get_hand(player *this_player);
@@ -161,14 +161,12 @@ int main() {
       run_turn(i, curr_game, connections[i]);
       printf("Finished turn of player %d\n", i);
 
-      printf("Here\n");
-      /*
       for (p=0; p<num_players; p++) {
 	printf("p: %d\n", p);
 	if (connections[p] != connections[i]) {
-	  run_BSing(connections[p]);
+	  run_BSing(connections[p], curr_game, p, i);
 	}
-	} bc we have yet to implement BSing */
+      }
     }
   }
   free(deck);
@@ -205,10 +203,8 @@ void remove_card(game* curr_game, int i, int newVal, char* newType) {
     }
     if (found && j<(curr_game->players[i].num_cards)-1) { //found + valid range
       //shift all values one to the right (starting at the one u found bc that needs to be overwritten
-      printf("before: %d of %s\n", curr_game->players[i].hand[j].value,curr_game->players[i].hand[j].type);
       curr_game->players[i].hand[j].value = curr_game->players[i].hand[j+1].value;
       curr_game->players[i].hand[j].type = curr_game->players[i].hand[j+1].type;
-      printf("after: %d of %s\n\n", curr_game->players[i].hand[j].value,curr_game->players[i].hand[j].type);
     }
   }
   curr_game->players[i].num_cards -= 1; //lower num_cards
@@ -252,25 +248,20 @@ void run_turn( int i, game* curr_game, int sd) {
       break;
     }
   }
-  printf("Exit first loop\n");
   char** cards_played;
   char buff2[25*17];
   while (1) {
     printf("Reading for player's move...\n");
     read(sd, buff2, sizeof(buff2));
     if(buff2[0] == 'd') {
-      printf("BUFF2: %s\n", buff2);
       int num_played = 0;
       cards_played = split(buff2, ",", &num_played, 1);
       int j;
       for (j=0; j<num_played; j++) {
 	printf("played[%d]: %s\n", j, cards_played[j]);
       }
-      printf("Before 'after_turn'\n");
       after_turn(curr_game, i, cards_played, num_played);
-      printf("After 'after_turn\n");
       for (j=0; j<curr_game->pile_size; j++) {
-	printf("j: %d\n", j);
 	printf("pile[%d]: %d of %s\n", j, curr_game->pile[j].value, curr_game->pile[j].type);
       }
       break;
@@ -282,35 +273,33 @@ void run_turn( int i, game* curr_game, int sd) {
   printf("END TURN\n");
 }
 
-void run_BSing( int sd ) {
-
-  char buffer[MESSAGE_BUFFER_SIZE];
-  while (read( sd, buffer, sizeof(buffer) )) {
-
-    printf("[SERVER %d] received: %s\n", getpid(), buffer );
-    process( buffer );
-    write( sd, buffer, sizeof(buffer));    
-  }
+void add_card_server(game* curr_game, int player_num, char* newType, int newVal) {
+  int sz = curr_game->players[player_num].num_cards;
+  curr_game->players[player_num].hand[sz].value = newVal;
+  strcpy(curr_game->players[player_num].hand[sz].type, newType);
 }
 
-void sub_server( int sd ) {
-
-  char buffer[MESSAGE_BUFFER_SIZE];
-  while (read( sd, buffer, sizeof(buffer) )) {
-
-    printf("[SERVER %d] received: %s\n", getpid(), buffer );
-    process( buffer );
-    write( sd, buffer, sizeof(buffer));    
-  }
+void run_BSing(int sd, game* curr_game, int accuser, int accused) {
+  char buffer[10];
+  int i;
   
-}
-void process( char * s ) {
-
-  while ( *s ) {
-    *s = (*s - 'a' + 13) % 26 + 'a';
-    s++;
+  while (1) {
+    printf("Reading for BS result...\n");
+    read(sd, buffer, sizeof(buffer)); //buffer = sign + num cards involved
+    if(buffer[0]=='1') { //player accused correct, player who BSed takes pile
+      for (i=0; i<curr_game->pile_size; i++) {
+	add_card_server(curr_game, accused, curr_game->pile[i].type, curr_game->pile[i].value);
+      }
+    }
+    if(buffer[0]=='0') { //player accused wrong, player takes pile
+      for (i=0; i<curr_game->pile_size; i++) {
+	add_card_server(curr_game, accuser, curr_game->pile[i].type, curr_game->pile[i].value);
+      }
+    }
   }
 }
+
+
 /*
 int run_human_turn_server(player* this_player, int curr_val, int sd) {
 
