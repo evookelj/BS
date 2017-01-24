@@ -169,20 +169,21 @@ int main() {
 		  curr_game->players[i].name,
 		  num_played,
 		  curr_val);
-	  
+
+	  char BUFFER[200];
 	  //Send notification to clients that it is time to BS
 	  while(1) {
 	    write(connections[p], msg, sizeof(msg));
 	    printf("Sent client [%d] %s\n", p,msg);
 	    
-	    read(connections[p], msg, 75);
-	    if (msg[0]=='2') {//or whatever indicator you choose
+	    read(connections[p], BUFFER, 75);
+	    if (BUFFER[0]=='2') {//or whatever indicator you choose
 	      printf("Accuse was correct!\n");
 	      break;
-	    } else if (msg[0]=='1') {
+	    } else if (BUFFER[0]=='1') {
 	      printf("Accuse was wrong\n");
 	      break;
-	    } else if (msg[0]=='0') {
+	    } else if (BUFFER[0]=='0') {
 	      printf("No accuse was taken\n");
 	      break;
 	    }
