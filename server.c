@@ -231,7 +231,7 @@ void run_turn( int i, game* curr_game, int sd) {
     write(sd, joined, (curr_game->players[i].num_cards)*20);
     printf("Trying to send deck...\n");
     read(sd, buffer, sizeof(buffer));
-    if(strcmp(buffer, "gotDeck") == 0) {
+    if(buffer[0] == 'g') {
       printf("Recieved gotDeck\n");
       break;
     }
