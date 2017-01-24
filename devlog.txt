@@ -32,7 +32,7 @@ emmaV -- 01-15-2017 11:00
 graceS -- 01-15-2017 12:00
        - Add profiles to client
 
-graceS -- 01-16-2017
+graceS -- 01-16-2017 12:00 - 5:00
        - Try to do networking
        - Failed at networking :'(
 
@@ -69,5 +69,14 @@ graceS -- 01-22-2017 13:00
        -I was overcomplicating things, back to the basics.
        -Simple networking > complex networking
        -It works! Woooo!!!!!!!!!
+
+emmaV & graceS -- 01-22-2017 14:00 - 19:00
+      - Begin to combine networking with gameplay
+      - Many bugs get fixed... many bugs get created
+      - Game has beginning functionality!
+
 emmaV & graceS -- 01-22-2017 10:00 --> 01-23-2017 <tbd>
       - Integrate actual game play as a team (via vid chat/screen share)
+      - Fix recurring error that began in class after a solid 7 hours
+      - Finish run turn!
+      - Start to implement accuse
