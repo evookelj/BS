@@ -16,6 +16,9 @@ The rules of BS are simple. The game requires at least three players and it uses
 ## Notes
 * Game will only work with three players
 * Not all functionality was implemented
+  * Profiles do not get updated
+  * Accuse does not work (Player's cannot "BS" other players, it crashes :( )
+* Bug: Sometimes, the names of the other players in the accuse function are wrong
 * Full in terminal game functionality exists (and is displayed/exists in commented out main function of player.c)
 
 ## List of Files in the Repo
