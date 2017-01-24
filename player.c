@@ -262,7 +262,8 @@ int ask_yn() {
 }
 
 //return 0 for BS'ing, 1 for truth'ing
-char* run_human_turn(card** hand, int size, int curr_val) {
+char* run_human_turn(card** hand, int size, int curr_val, int* is_bs) {
+  int ans;
   printf("\nThe current value in play is %d. The cards you have that fit this are: \n", curr_val);
   int count = 0;
   int* fitting = get_fitting(hand, size, curr_val, &count);
@@ -277,13 +278,14 @@ char* run_human_turn(card** hand, int size, int curr_val) {
     printf("Press enter to continue.\n");
     fgets(input, sizeof(input), stdin);
     printf("Would you like to BS? (Y/y/N/n)\n");
-    int ans = ask_yn();
+    ans = ask_yn();
     if(ans) {
       return run_BS(hand, size, curr_val);
     } else {
       return run_truth_turn(hand, size, count, curr_val, fitting);
     }
   }
+  *(is_bs) = ans;
   return 0;
 }
 
@@ -297,13 +299,12 @@ int run_human_accuse(char* this_player, char* last_player, int num_cards_from_tu
     fgets(input, sizeof(input), stdin);
     if (is_bs) {
       printf("You were correct! %s now has to take the pile.\n", last_player);
-      //send msg to indicate
+      return 1;
     } else {
       printf("You were wrong :( and now have to take the pile.\n");
-      //send msg to indicate
+      return 0;
     }
-  } else {
-    printf("Okay, moving on then...\n");
-  }
-  return 0;
+  } 
+  printf("Okay, moving on then...\n");
+  return 2;
 }

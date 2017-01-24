@@ -7,7 +7,7 @@
 #include "player.h"
 #include "server.h"
 
-void run_human_turn_client(int curr_val, int sd);
+void run_human_turn_client(int curr_val, int sd, int* is_bs);
 
 int main( int argc, char *argv[] ) {
 
@@ -28,6 +28,8 @@ int main( int argc, char *argv[] ) {
   
   int sd;
 
+  int is_bs;
+
   sd = client_connect( host );
 
   char buffer[MESSAGE_BUFFER_SIZE];
@@ -41,23 +43,34 @@ int main( int argc, char *argv[] ) {
     }
   }
 
+  int placeh;
   while(1) {
     read(sd, buffer, sizeof(buffer));
-
+    
     int val = (int)strtol(buffer, (char**)NULL, 10);
     if(strcmp(buffer, "notTurn") == 0) {
       printf("It's not your turn!\n");
     } else if (val) {
       printf("It's your turn!\n");
-      run_human_turn_client(val, sd);
+      run_human_turn_client(val, sd, &is_bs);
     }
-    if(strcmp(buffer, "bs") == 0) {
+    if(buffer[0] == 'b') {
       printf("Got the BS\n");
-      //INSERT CLIENT BS STUFF THAT SENDS INDICATOR
+      char** args = split(buffer, ",", &placeh, 0);
+      int i;
+      for (i=0; i<placeh; i++) {
+	printf("Recieved[%d]: %s\n",i,args[i]);
+      }
+
+      int result = run_human_accuse(args[0],args[1],(int)strtol(args[2],(char**)NULL, 10), (int)strtol(args[3],(char**)NULL, 10), is_bs);
+      printf("result: %d\n", result);
+      char res[2];
+      sprintf(res, "%d", result);
+      write(sd, res, sizeof(res));
     }
   }
 
-  buff3[5];
+  char buff3[5];
   while(1) {
     read(sd, buff3, sizeof(buff3));
   }
@@ -65,7 +78,7 @@ int main( int argc, char *argv[] ) {
   return 0;
 }
 
-void run_human_turn_client(int curr_val, int sd) {
+void run_human_turn_client(int curr_val, int sd, int* is_bs) {
   //Get deck of cards
   char buffer[17*200];
   int rd;
@@ -93,7 +106,7 @@ void run_human_turn_client(int curr_val, int sd) {
 	hand[i]->value = ind;
 	hand[i]->type = new[1];
       }
-      char* played = run_human_turn(hand, size, curr_val);
+      char* played = run_human_turn(hand, size, curr_val, is_bs);
       write(sd, played, size*17);
       printf("Sent played cards to server\n");
       

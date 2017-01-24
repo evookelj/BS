@@ -17,6 +17,8 @@ void rules();
 //returns 1 if yes, 0 if no
 int ask_yn();
 
-char* run_human_turn(card** hand, int size, int curr_val);
+char* run_human_turn(card** hand, int size, int curr_val, int* is_bs);
+
+int run_human_accuse(char* this_player, char* last_player, int num_cards_from_turn, int curr_val, int is_bs);
 
 #endif

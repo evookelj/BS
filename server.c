@@ -164,19 +164,18 @@ int main() {
       for (p=0; p<num_players; p++) {
 	printf("p: %d\n", p);
 	if (connections[p] != connections[i]) {
-	  char msg[75];
-	  sprintf(msg,"%s,%s,%d,%d,%d,",
-		  curr_game->players[p]->name,
-		  curr_game->players[i]->name,
+	  char msg[200];
+	  sprintf(msg,"b,%s,%s,%d,%d,",
+		  curr_game->players[p].name,
+		  curr_game->players[i].name,
 		  num_played,
-		  curr_val,
-		  is_bs);
+		  curr_val);
 	  
 	  //Send notification to clients that it is time to BS
 	  while(1) {
-	    write(connections[p], "bs", 3);
-	    printf("Sent client [%d] 'bs'\n", p);
-	    read(connections[p], b, 3);
+	    write(connections[p], msg, sizeof(msg));
+	    printf("Sent client [%d] %s\n", p,msg);
+	    read(connections[p], msg, 75);
 	    if (strcmp(b, "ok") == 0) {//or whatever indicator you choose
 	      printf("Got the ok\n");
 	      break;
