@@ -180,7 +180,7 @@ char* run_BS(card** hand, int size, int curr_val) {
 }
 
 int* get_fitting(card** hand, int size, int curr_val, int* count) {
-  static int ret[17];
+  int* ret = malloc(sizeof(int) * 4);
   int i;
   int cnt = 0;
   for (i=0; i<size; i++) {
@@ -212,7 +212,7 @@ char* run_truth_turn(card** hand, int size, int count, int curr_val, int* fittin
   } else {
     printf("To pick cards to put down, enter the index as listed in your printed deck of fitting cards (from 1 to %d) and press enter. Enter 'S/s' to stop after selecting at least one card.\n", count);
     int cont = 1;
-    int sel[count];
+    int sel[size];
     int cntSel = 0;
     char input[20];
     while (cont) {
@@ -279,6 +279,7 @@ char* run_human_turn(card** hand, int size, int curr_val) {
   int* fitting = get_fitting(hand, size, curr_val, &count);
   if (count==0) {
     printf("You have no choice but to BS, as you have no cards of value %d.\n", curr_val);
+    print_hand(hand, size);
     return run_BS(hand, size, curr_val);
   } else {
     char input[100];

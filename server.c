@@ -149,15 +149,18 @@ int main() {
       printf("Sent client [%d] '%s' \n", i, msg);
       curr_val++;
       if (curr_val == 14) { curr_val = 1; }
+      printf("Running turn of player %d\n", i);
       run_turn(i, curr_game, connections[i]);
+      printf("Finished turn of player %d\n", i);
 
       printf("Here\n");
+      /*
       for (p=0; p<num_players; p++) {
 	printf("p: %d\n", p);
 	if (connections[p] != connections[i]) {
 	  run_BSing(connections[p]);
 	}
-      }
+	} bc we have yet to implement BSing */
     }
   }
   free(deck);
@@ -182,6 +185,7 @@ void run_turn( int i, game* curr_game, int sd) {
   int size;
   char* joined = str_hand(curr_game->players[i]);
   char buffer[8];
+  int count;
   while (1) {
     write(sd, joined, (curr_game->players[i].num_cards)*200);
     printf("Trying to send deck...\n");
@@ -191,12 +195,14 @@ void run_turn( int i, game* curr_game, int sd) {
       break;
     }
   }
+  printf("Exit first loop\n");
+  char** cards_played;
   while (1) {
     printf("Reading for player's move...\n");
     read(sd, buffer, (curr_game->players[0].num_cards)*17);
     if(buffer[0] == 'd') {
       int num_played;
-      char** cards_played = split(buffer, ",", &num_played, 1);
+      cards_played = split(buffer, ",", &num_played, 1);
       int i;
       for (i=0; i<num_played; i++) {
 	printf("i: %d\n", i);
@@ -205,6 +211,9 @@ void run_turn( int i, game* curr_game, int sd) {
       break;
     }
   }
+  free(cards_played);
+  free(joined);
+  
   printf("END TURN\n");
 }
 
