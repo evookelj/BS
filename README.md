@@ -15,6 +15,10 @@ Systems Final Project (BS): Emma Vukelj and Grace Stempel
 * server.c
 * server.h
 
+## Rules of BS
+The rules of BS are simple. The game requires at least three players and it uses a standard deck of cards with no Jokers. The deck of cards will be dealt out evenly, any remainders will be placed in the pile of cards. The first player must put down at least one Ace, or fake it by putting differnt cards. The next player puts down a Two, the third player a Three, etc. After every turn, the other players can question the validity of cards placed down. If the player is caught bluffing, they must pick up the entire discarded pile and add it to their hand. If the player was not bluffing, the player who challenged them recieves the cards in the pile. The  goal is to get rid of all your cards.
+
+
 ## How to Play
 * Make
 * Run ./server
