@@ -162,7 +162,7 @@ char* run_BS(card** hand, int size, int curr_val) {
 	  printf("Great! You have selected to put down the following cards and claim them as %d's.\n", curr_val);
 	  for (i=0; i<count; i++) {
 	    printf("%d of %s\n", hand[sel[i]]->value, hand[sel[i]]->type);
-	    char add[15];
+	    char add[20];
 	    sprintf(add, "%d %s,", hand[sel[i]]->value, hand[sel[i]]->type);
 	    printf("SPRINTED\n");
 	    strcat(ret, add);
@@ -194,7 +194,6 @@ int* get_fitting(card** hand, int size, int curr_val, int* count) {
     printf("None\n");
   }
   *(count) = cnt;
-  
   return ret;
 }
 
@@ -206,7 +205,7 @@ char* run_truth_turn(card** hand, int size, int count, int curr_val, int* fittin
   if (count==1) {
     printf("You only have one card of value %d, so you must play that. Press enter to continue.\n", curr_val);
     fgets(input, sizeof(input), stdin);
-    char add[17];
+    char add[20];
     sprintf(add, "%d %s,", hand[fitting[0]]->value, hand[fitting[0]]->type);
     strcat(ret, add);
   } else {
@@ -224,7 +223,7 @@ char* run_truth_turn(card** hand, int size, int count, int curr_val, int* fittin
 	  printf("hand[%d]: %d of %s\n\n", fitting[ind]+1, hand[fitting[ind]]->value, hand[fitting[ind]]->type);
 	  sel[cntSel] = fitting[ind];
 	  cntSel++;
-	  char add[15];
+	  char add[20];
 	  sprintf(add, "%d %s,", hand[fitting[ind]]->value, hand[fitting[ind]]->type);
 	  strcat(ret, add);
 	  if (cntSel==count) {

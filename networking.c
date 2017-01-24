@@ -26,7 +26,7 @@ char ** split(char * str, char * delim, int * size, int skip_first) {
     }
   }
   *(size) = i-1;
-  if (skip_first) { size--; }
+  //if (skip_first) { size--; }
   ret[i] = 0; //null term for both exec and cmd parsing
   return ret;
 }

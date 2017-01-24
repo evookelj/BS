@@ -200,7 +200,7 @@ void run_turn( int i, game* curr_game, int sd) {
   char buff2[25*17];
   while (1) {
     printf("Reading for player's move...\n");
-    read(sd, buff2, sizeof(buffer));
+    read(sd, buff2, sizeof(buff2));
     if(buff2[0] == 'd') {
       printf("BUFF2: %s\n", buff2);
       int num_played = 0;
