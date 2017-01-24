@@ -10,7 +10,7 @@
 void process( char * s );
 void sub_server( int sd );
 //void run_turn( int sd );
-void run_BSing(int sd, game* curr_game, int accuser, int accused);
+void run_BSing(int sd, game* curr_game, int accuser, int accused, int res);
 char* get_names( int sd );
 //int run_human_turn_server(player* this_player, int curr_val);
 char* get_hand(player *this_player);
@@ -171,25 +171,24 @@ int main() {
 		  curr_val);
 	  
 	  //Send notification to clients that it is time to BS
-	  int got;
 	  while(1) {
 	    write(connections[p], msg, sizeof(msg));
 	    printf("Sent client [%d] %s\n", p,msg);
 	    
 	    read(connections[p], msg, 75);
-	    got = (int)strtol(msg, (char**)NULL, 10);
-	    if (got==2) {//or whatever indicator you choose
+	    if (msg[0]=='2') {//or whatever indicator you choose
 	      printf("Accuse was correct!\n");
 	      break;
-	    } else if (got) {
+	    } else if (msg[0]=='1') {
 	      printf("Accuse was wrong\n");
 	      break;
-	    } else {
+	    } else if (msg[0]=='0') {
 	      printf("No accuse was taken\n");
 	      break;
 	    }
 	  }
-	  run_BSing(connections[p], curr_game, p, i);
+	  printf("RUNNING SERVER BSING\n");
+	  run_BSing(connections[p], curr_game, p, i, (int)strtol(msg, (char**)NULL, 10));
 	}
       }
       curr_val++;
@@ -302,24 +301,26 @@ int run_turn( int i, game* curr_game, int sd) {
 
 void add_card_server(game* curr_game, int player_num, char* newType, int newVal) {
   int sz = curr_game->players[player_num].num_cards;
+  printf("sz: %d\n", sz);
   curr_game->players[player_num].hand[sz].value = newVal;
   strcpy(curr_game->players[player_num].hand[sz].type, newType);
 }
 
-void run_BSing(int sd, game* curr_game, int accuser, int accused) {
+void run_BSing(int sd, game* curr_game, int accuser, int accused, int res) {
   char buffer[10];
   int i;
   
   while (1) {
-    printf("Reading for BS result...\n");
-    read(sd, buffer, sizeof(buffer)); //buffer = sign + num cards involved
-    if(buffer[0]=='1') { //player accused correct, player who BSed takes pile
+    if(res==2) { //player accused correct, player who BSed takes pile
+      printf("Handling correct accusation\n");
       for (i=0; i<curr_game->pile_size; i++) {
 	add_card_server(curr_game, accused, curr_game->pile[i].type, curr_game->pile[i].value);
       }
     }
-    if(buffer[0]=='0') { //player accused wrong, player takes pile
+    if(res==1) { //player accused wrong, player takes pile
+      printf("Handling incorr accusation\n");
       for (i=0; i<curr_game->pile_size; i++) {
+	printf("i: %d\n", i);
 	add_card_server(curr_game, accuser, curr_game->pile[i].type, curr_game->pile[i].value);
       }
     }

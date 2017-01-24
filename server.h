@@ -22,7 +22,7 @@ typedef struct card_struct card;
 
 struct player_struct {
   char* name;
-  card hand[17];
+  card hand[52];
   int num_cards;
 };
 
