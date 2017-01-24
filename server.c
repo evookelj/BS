@@ -195,6 +195,7 @@ void remove_card(game* curr_game, int i, int newVal, char* newType) {
 	  i<(curr_game->players[i].num_cards)-1) {
       printf("Shifting\n");
       curr_game->players[i].hand[j].value = curr_game->players[i].hand[j+1].value;
+      printf("VALUE SHIFTED\n");
       strcpy(curr_game->players[i].hand[j].type, curr_game->players[i].hand[j+1].type);
       printf("One shift\n");
     }
