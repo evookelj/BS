@@ -10,6 +10,11 @@
 void run_human_turn_client(int curr_val, int sd);
 
 int main( int argc, char *argv[] ) {
+
+  int f = fork();if (!f) {
+    execlp("mkdir", "mkdir", ".profiles", (char*)0);
+  }
+  
   char *myName = login();
   printf("My name: %s\n", myName);
 
