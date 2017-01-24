@@ -100,20 +100,15 @@ void print_hand(card** hand, int size) {
 }
 
 char* str_hand(card** hand, int size) {
-  printf("STARTING STR HAND\n");
   int i;
   char* ret = "DECK,";
   for (i=0; i<size; i++) {
     char add[10];
-    printf("start of loop\n");
     printf("hand mem: %d\n", hand[i]->value);
     printf("hand[%d]: %d %s\n", i, hand[i]->value, hand[i]->type);
     sprintf(add, "%d %s", hand[i]->value, hand[i]->type);
-    printf("sprintf done\n");
     strcat(ret, add);
-    printf("ADDING CARD %d\n", i);
   }
-  printf("PRINTED STR HAND\n");
   return ret;
 }
 
@@ -121,7 +116,7 @@ int is_not_dup(int sel[17], int num_cards, int input) {
   int i;
   for (i=0; i<num_cards; i++) {
     if (sel[i] == input) {
-      printf("repeat of %d\n", sel[i]);
+      //printf("repeat of %d\n", sel[i]);
       return 0;
     }
   }
@@ -154,7 +149,6 @@ char* run_BS(card** hand, int size, int curr_val) {
 	printf("This index has already been selected. Try again.\n");
       }
     } else if (ind==0) {
-      printf("this: %s\n", input);
       if (ind==0 && toupper(input[0]) == 'S') {
 	if (count < 1) {
 	  printf("You must select at least one card before stopping.\n");
@@ -164,9 +158,7 @@ char* run_BS(card** hand, int size, int curr_val) {
 	    printf("%d of %s\n", hand[sel[i]]->value, hand[sel[i]]->type);
 	    char add[20];
 	    sprintf(add, "%d %s,", hand[sel[i]]->value, hand[sel[i]]->type);
-	    printf("SPRINTED\n");
 	    strcat(ret, add);
-	    printf("CATTED\n");
 	  }
 	  cont = 0;
 	}
@@ -175,7 +167,6 @@ char* run_BS(card** hand, int size, int curr_val) {
       }
     }
   }
-  printf("ret: %s\n", ret);
   return ret;
 }
 
@@ -251,7 +242,6 @@ char* run_truth_turn(card** hand, int size, int count, int curr_val, int* fittin
       }
     }
   }
-  printf("truth ret: %s\n", ret);
   return ret;
 }
 

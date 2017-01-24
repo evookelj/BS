@@ -31,6 +31,7 @@ typedef struct player_struct player;
 struct game_struct {
   player* players;
   card* pile;
+  int pile_size;
 };
 
 typedef struct game_struct game;

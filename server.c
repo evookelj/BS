@@ -115,6 +115,7 @@ int main() {
     printf("NEW i: %d\n", i+offset);
     curr_game->pile[i] = deck[i+offset];
   }
+  curr_game->pile_size = 52-offset;
 
   //Get names of players from clients
   for(i = 0; i<num_players; i++) {
@@ -179,6 +180,45 @@ char* get_names( int sd ) {
   return "";
 }
 
+void remove_card(game* curr_game, int i, int newVal, char* newType) {
+  printf("Remove card line 1\n");
+  int j;
+  int found = 0;
+  for (j=0; j<curr_game->players[i].num_cards; j++) {
+    printf("j: %d\n", j);
+    if (curr_game->players[i].hand[j].value == newVal &&
+	!strcmp(curr_game->players[i].hand[j].type, newType) &&
+	!found) {
+      found = 1;
+      printf("Found!\n");
+    } if (found &&
+	  i<(curr_game->players[i].num_cards)-1) {
+      printf("Shifting\n");
+      curr_game->players[i].hand[j].value = curr_game->players[i].hand[j+1].value;
+      strcpy(curr_game->players[i].hand[j].type, curr_game->players[i].hand[j+1].type);
+      printf("One shift\n");
+    }
+  }
+}
+
+void after_turn(game* curr_game, int player_num, char** cards_played, int num_cards_played) {
+  printf("Starting after turn!\n");
+  card** played;
+  int i;
+  int placehold;
+  for (i=0; i<num_cards_played; i++) {
+    printf("Splitting char**\n");
+    char** split_card = split(cards_played[i], " ", &placehold, 0);
+    int val = (int)strtol(split_card[0], (char**)NULL, 10);
+    printf("Starting remove card\n");
+    remove_card(curr_game, i, val, split_card[1]);
+    curr_game->pile[curr_game->pile_size].value = val;
+    curr_game->pile[curr_game->pile_size].type = split_card[1];
+    curr_game->pile_size++;
+    printf("Update curr game\n");
+  }
+}
+
 void run_turn( int i, game* curr_game, int sd) {
   //Write deck to client
   printf("RUNNING TURN\n");
@@ -204,14 +244,12 @@ void run_turn( int i, game* curr_game, int sd) {
     if(buff2[0] == 'd') {
       printf("BUFF2: %s\n", buff2);
       int num_played = 0;
-      printf("num_played: %d\n", num_played);
       cards_played = split(buff2, ",", &num_played, 1);
-      int i;
-      printf("num_played: %d\n", num_played);
-      for (i=0; i<num_played; i++) {
-	printf("i: %d\n", i);
-	printf("played[%d]: %s\n", i, cards_played[i]);
+      int j;
+      for (j=0; j<num_played; j++) {
+	printf("played[%d]: %s\n", j, cards_played[j]);
       }
+      after_turn(curr_game, i, cards_played, num_played);
       break;
     }
   }
