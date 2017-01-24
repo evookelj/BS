@@ -189,7 +189,7 @@ void run_turn( int i, game* curr_game, int sd) {
   while (1) {
     write(sd, joined, (curr_game->players[i].num_cards)*200);
     printf("Trying to send deck...\n");
-    read(sd, buffer, 8);
+    read(sd, buffer, sizeof(buffer));
     if(strcmp(buffer, "gotDeck") == 0) {
       printf("Recieved gotDeck\n");
       break;
@@ -197,12 +197,13 @@ void run_turn( int i, game* curr_game, int sd) {
   }
   printf("Exit first loop\n");
   char** cards_played;
+  char buff2[(curr_game->players[i].num_cards)*17];
   while (1) {
     printf("Reading for player's move...\n");
-    read(sd, buffer, (curr_game->players[0].num_cards)*17);
-    if(buffer[0] == 'd') {
+    read(sd, buff2, sizeof(buffer));
+    if(buff2[0] == 'd') {
       int num_played;
-      cards_played = split(buffer, ",", &num_played, 1);
+      cards_played = split(buff2, ",", &num_played, 1);
       int i;
       for (i=0; i<num_played; i++) {
 	printf("i: %d\n", i);
