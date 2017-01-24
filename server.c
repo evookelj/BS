@@ -197,11 +197,12 @@ void run_turn( int i, game* curr_game, int sd) {
   }
   printf("Exit first loop\n");
   char** cards_played;
-  char buff2[17*17];
+  char buff2[25*17];
   while (1) {
     printf("Reading for player's move...\n");
     read(sd, buff2, sizeof(buffer));
     if(buff2[0] == 'd') {
+      printf("BUFF2: %s\n", buff2);
       int num_played = 0;
       printf("num_played: %d\n", num_played);
       cards_played = split(buff2, ",", &num_played, 1);

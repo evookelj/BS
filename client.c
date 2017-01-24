@@ -90,7 +90,7 @@ void run_human_turn_client(int curr_val, int sd) {
 	hand[i]->type = new[1];
       }
       char* played = run_human_turn(hand, size, curr_val);
-      write(sd, played, size*15+1);
+      write(sd, played, size*17);
       printf("Sent played cards to server\n");
       
       free(played);
