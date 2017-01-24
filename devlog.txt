@@ -69,3 +69,5 @@ graceS -- 01-22-2017 13:00
        -I was overcomplicating things, back to the basics.
        -Simple networking > complex networking
        -It works! Woooo!!!!!!!!!
+emmaV & graceS -- 01-22-2017 10:00 --> 01-23-2017 <tbd>
+      - Integrate actual game play as a team (via vid chat/screen share)
