@@ -158,12 +158,20 @@ int main() {
       curr_val++;
       if (curr_val == 14) { curr_val = 1; }
       printf("Running turn of player %d\n", i);
-      run_turn(i, curr_game, connections[i]);
+      int num_played = run_turn(i, curr_game, connections[i]);
       printf("Finished turn of player %d\n", i);
 
       for (p=0; p<num_players; p++) {
 	printf("p: %d\n", p);
 	if (connections[p] != connections[i]) {
+	  char msg[75];
+	  sprintf(msg,"%s,%s,%d,%d,%d,",
+		  curr_game->players[p]->name,
+		  curr_game->players[i]->name,
+		  num_played,
+		  curr_val,
+		  is_bs);
+	  
 	  //Send notification to clients that it is time to BS
 	  while(1) {
 	    write(connections[p], "bs", 3);
@@ -242,13 +250,14 @@ void after_turn(game* curr_game, int player_num, char** cards_played, int num_ca
   }
 }
 
-void run_turn( int i, game* curr_game, int sd) {
+int run_turn( int i, game* curr_game, int sd) {
   //Write deck to client
   printf("RUNNING TURN\n");
   int size;
   char* joined = str_hand(curr_game->players[i]);
   char buffer[8];
   int count;
+  int num_played = 0;
   while (1) {
     write(sd, joined, (curr_game->players[i].num_cards)*20);
     printf("Trying to send deck...\n");
@@ -264,7 +273,6 @@ void run_turn( int i, game* curr_game, int sd) {
     printf("Reading for player's move...\n");
     read(sd, buff2, sizeof(buff2));
     if(buff2[0] == 'd') {
-      int num_played = 0;
       cards_played = split(buff2, ",", &num_played, 1);
       int j;
       for (j=0; j<num_played; j++) {
@@ -281,6 +289,7 @@ void run_turn( int i, game* curr_game, int sd) {
   free(joined);
   
   printf("END TURN\n");
+  return num_played;
 }
 
 void add_card_server(game* curr_game, int player_num, char* newType, int newVal) {

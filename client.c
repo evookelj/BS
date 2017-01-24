@@ -56,16 +56,10 @@ int main( int argc, char *argv[] ) {
       //INSERT CLIENT BS STUFF THAT SENDS INDICATOR
     }
   }
-  
-  while (1) {
-    printf("enter message: ");
-    fgets( buffer, sizeof(buffer), stdin );
-    char *p = strchr(buffer, '\n');
-    *p = 0;
-  
-    write( sd, buffer, sizeof(buffer) );
-    read( sd, buffer, sizeof(buffer) );
-    printf( "received: %s\n", buffer );
+
+  buff3[5];
+  while(1) {
+    read(sd, buff3, sizeof(buff3));
   }
   
   return 0;
