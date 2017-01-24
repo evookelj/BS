@@ -5,29 +5,9 @@
 
 #include "networking.h"
 #include "player.h"
+#include "server.h"
 
 void run_human_turn_client(int curr_val, int sd);
-
-char ** split(char * str, char * delim, int * size, int skip_first) {
-  //effectively split str by delim
-  char ** ret = (char **) malloc(1000);
-  char *t = str;
-
-  int i = 0;
-  int first = skip_first;
-  while ( t != NULL ) {
-    if (first) {
-      strsep(&t, delim);
-      first = 0;
-    } else {
-      ret[i] = strsep(&t, delim);
-      i++;
-    }
-  }
-  *(size) = i-1;
-  ret[i] = 0; //null term for both exec and cmd parsing
-  return ret;
-}
 
 int main( int argc, char *argv[] ) {
   char *myName = login();
@@ -85,34 +65,38 @@ int main( int argc, char *argv[] ) {
 void run_human_turn_client(int curr_val, int sd) {
   //Get deck of cards
   char buffer[17*200];
-  int rd = read(sd, buffer, 17*200);
-  if (buffer[0] == 'd') {//used so prog knows cards sending
-    write(sd, "gotDeck", 8);
-    printf("Sent 'gotDeck' to server\n");
-    char* msg;
-    msg = buffer;
-    printf("Recieved: %s\n", msg);
-    int size;
-    char** hand_str = split(msg, ",", &size, 1);
-    card** hand = malloc(sizeof(card*) * 17);
-    int i;
-    printf("size: %d\n", size);
-    int placeholder;
-    char** new;
-    for (i=0; i<size; i++) {
-      new = split(hand_str[i], " ", &placeholder, 0);
-      int ind = (int)strtol(new[0], (char**)NULL, 10);
-      hand[i] = malloc(sizeof(card));
-      hand[i]->value = ind;
-      hand[i]->type = new[1];
+  int rd;
+  while (1) {
+    printf("READING FOR CARDS...\n");
+    rd = read(sd, buffer, 17*200);
+    if (buffer[0] == 'd') {//used so prog knows cards sending
+      write(sd, "gotDeck", 8);
+      printf("Sent 'gotDeck' to server\n");
+      char* msg;
+      msg = buffer;
+      printf("Recieved: %s\n", msg);
+      int size;
+      char** hand_str = split(msg, ",", &size, 1);
+      card** hand = malloc(sizeof(card*) * 17);
+      int i;
+      printf("size: %d\n", size);
+      int placeholder;
+      char** new;
+      for (i=0; i<size; i++) {
+	new = split(hand_str[i], " ", &placeholder, 0);
+	int ind = (int)strtol(new[0], (char**)NULL, 10);
+	hand[i] = malloc(sizeof(card));
+	hand[i]->value = ind;
+	hand[i]->type = new[1];
+      }
+      char* played = run_human_turn(hand, size, curr_val);
+      write(sd, played, size*15+1);
+      printf("Sent played cards to server\n");
+      
+      free(played);
+      free(hand);
+      break;
     }
-    char* played = run_human_turn(hand, size, curr_val);
-    printf("played: %s\n", played);
-    free(played);
-    free(hand);
   }
-  else {
-    printf("Trying to get deck...\n");
-    run_human_turn_client(curr_val, sd);
-  }
+  return;
 }

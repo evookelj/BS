@@ -151,7 +151,9 @@ int main() {
       if (curr_val == 14) { curr_val = 1; }
       run_turn(i, curr_game, connections[i]);
 
+      printf("Here\n");
       for (p=0; p<num_players; p++) {
+	printf("p: %d\n", p);
 	if (connections[p] != connections[i]) {
 	  run_BSing(connections[p]);
 	}
@@ -176,21 +178,34 @@ char* get_names( int sd ) {
 
 void run_turn( int i, game* curr_game, int sd) {
   //Write deck to client
+  printf("RUNNING TURN\n");
   int size;
   char* joined = str_hand(curr_game->players[i]);
   char buffer[8];
   write(sd, joined, (curr_game->players[i].num_cards)*200);
-  read(sd, buffer, 8);
   while (1) {
+    printf("Trying to send deck...\n");
+    read(sd, buffer, 8);
     if(strcmp(buffer, "gotDeck") == 0) {
       printf("Recieved gotDeck\n");
       break;
-    } else {
-      printf("Trying to send deck...\n");
-      run_turn(i, curr_game, sd);
+    }
+  }
+  while (1) {
+    printf("Reading for player's move...\n");
+    read(sd, buffer, (curr_game->players[0].num_cards)*17);
+    if(buffer[0] == 'd') {
+      int num_played;
+      char** cards_played = split(buffer, ",", &num_played, 1);
+      int i;
+      for (i=0; i<num_played; i++) {
+	printf("i: %d\n", i);
+	printf("played[%d]: %s\n", i, cards_played[i]);
+      }
       break;
     }
   }
+  printf("END TURN\n");
 }
 
 void run_BSing( int sd ) {

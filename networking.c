@@ -9,6 +9,28 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
+char ** split(char * str, char * delim, int * size, int skip_first) {
+  //effectively split str by delim
+  char ** ret = (char **) malloc(1000);
+  char *t = str;
+
+  int i = 0;
+  int first = skip_first;
+  while ( t != NULL ) {
+    if (first) {
+      strsep(&t, delim);
+      first = 0;
+    } else {
+      ret[i] = strsep(&t, delim);
+      i++;
+    }
+  }
+  *(size) = i-1;
+  if (skip_first) { size--; }
+  ret[i] = 0; //null term for both exec and cmd parsing
+  return ret;
+}
+
 void error_check( int i, char *s ) {
   if ( i < 0 ) {
     printf("%d\n", i);

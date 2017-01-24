@@ -132,6 +132,10 @@ char* run_BS(card** hand, int size, int curr_val) {
   printf("To pick cards to put down, enter the index as listed in your printed deck (from 1 to %d) and press enter. Enter 'S/s' to stop after selecting at least one card.\n", size);
   int cont = 1;
   int sel[size];
+  int i;
+  for (i=0; i<size; i++) {
+    sel[i] = 18;
+  }
   int count = 0;
   char input[20];
   char* ret = malloc(size*15);
@@ -156,7 +160,6 @@ char* run_BS(card** hand, int size, int curr_val) {
 	  printf("You must select at least one card before stopping.\n");
 	} else {
 	  printf("Great! You have selected to put down the following cards and claim them as %d's.\n", curr_val);
-	  int i;
 	  for (i=0; i<count; i++) {
 	    printf("%d of %s\n", hand[sel[i]]->value, hand[sel[i]]->type);
 	    char add[15];
