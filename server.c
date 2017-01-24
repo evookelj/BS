@@ -257,7 +257,9 @@ void run_turn( int i, game* curr_game, int sd) {
       for (j=0; j<num_played; j++) {
 	printf("played[%d]: %s\n", j, cards_played[j]);
       }
+      printf("Before 'after_turn\n");
       after_turn(curr_game, i, cards_played, num_played);
+      printf("After 'after_turn\n");
       for (j=0; j<curr_game->pile_size; j++) {
 	printf("j: %d\n", j);
 	printf("pile[%d]: %d of %s\n", j, curr_game->pile[j].value, curr_game->pile[j].type);
