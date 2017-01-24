@@ -19,7 +19,7 @@ Systems Final Project (BS): Emma Vukelj and Grace Stempel
 * Make
 * Run ./server
 * Run ./client on a different computer with the IP address of machine running server as the first command line argument
-** Can be run locally if no command line arguments are inputed
+  ** Can be run locally if no command line arguments are inputed
 
 ## Notes
 * Game will only work with three players
