@@ -164,6 +164,16 @@ int main() {
       for (p=0; p<num_players; p++) {
 	printf("p: %d\n", p);
 	if (connections[p] != connections[i]) {
+	  //Send notification to clients that it is time to BS
+	  while(1) {
+	    write(connections[p], "bs", 3);
+	    printf("Sent client [%d] 'bs'\n", p);
+	    read(connections[p], b, 3);
+	    if (strcmp(b, "ok") == 0) {//or whatever indicator you choose
+	      printf("Got the ok\n");
+	      break;
+	    }
+	  }
 	  run_BSing(connections[p], curr_game, p, i);
 	}
       }

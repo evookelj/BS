@@ -51,6 +51,10 @@ int main( int argc, char *argv[] ) {
       printf("It's your turn!\n");
       run_human_turn_client(val, sd);
     }
+    if(strcmp(buffer, "bs") == 0) {
+      printf("Got the BS\n");
+      //INSERT CLIENT BS STUFF THAT SENDS INDICATOR
+    }
   }
   
   while (1) {
