@@ -206,6 +206,9 @@ char* run_truth_turn(card** hand, int size, int count, int curr_val, int* fittin
   if (count==1) {
     printf("You only have one card of value %d, so you must play that. Press enter to continue.\n", curr_val);
     fgets(input, sizeof(input), stdin);
+    char add[17];
+    sprintf(add, "%d %s,", hand[fitting[0]]->value, hand[fitting[0]]->type);
+    strcat(ret, add);
   } else {
     printf("To pick cards to put down, enter the index as listed in your printed deck of fitting cards (from 1 to %d) and press enter. Enter 'S/s' to stop after selecting at least one card.\n", count);
     int cont = 1;
