@@ -188,24 +188,22 @@ char* get_names( int sd ) {
 }
 
 void remove_card(game* curr_game, int i, int newVal, char* newType) {
-  printf("Remove card line 1\n");
   int j;
   int found = 0;
   for (j=0; j<curr_game->players[i].num_cards; j++) {
-    if (curr_game->players[i].hand[j].value == newVal &&
+    if (curr_game->players[i].hand[j].value == newVal && //same val and type
 	!strcmp(curr_game->players[i].hand[j].type, newType) &&
-	!found) {
+	!found) { //hasn't already been found
       found = 1;
-    } if (found &&
-	  j<(curr_game->players[i].num_cards)-2) {
-      curr_game->players[i].hand[j].value = curr_game->players[i].hand[j+1].value;
-      //printf("curr type: %s\n", curr_game->players[i].hand[j].type);
-      //printf("next type: %s\n", curr_game->players[i].hand[j+1].type);
-      curr_game->players[i].hand[j].type = curr_game->players[i].hand[j+1].type;
-      //printf("curr type: %s\n\n", curr_game->players[i].hand[j].type);
+    }
+    if (found && j<(curr_game->players[i].num_cards)) { //found + valid range
+      //shift all values one to the right (starting at the one u found bc that needs to be overwritten
+      curr_game->players[i].hand[j-1].value = curr_game->players[i].hand[j].value;
+      curr_game->players[i].hand[j-1].type = curr_game->players[i].hand[j].type;
     }
   }
-  curr_game->players[i].num_cards -= 1;
+  curr_game->players[i].num_cards -= 1; //lower num_cards
+  printf("Removing %d of %s\n", newVal, newType);
 }
 
 void after_turn(game* curr_game, int player_num, char** cards_played, int num_cards_played) {
@@ -213,14 +211,19 @@ void after_turn(game* curr_game, int player_num, char** cards_played, int num_ca
   card** played;
   int i;
   int placehold;
-  for (i=0; i<num_cards_played; i++) {
+  for (i=0; i<num_cards_played; i++) { //for each card they've played
+
     char** split_card = split(cards_played[i], " ", &placehold, 0);
+
+    //add card to pile
     int val = (int)strtol(split_card[0], (char**)NULL, 10);
     curr_game->pile[curr_game->pile_size].value = val;
     curr_game->pile[curr_game->pile_size].type = split_card[1];
     curr_game->pile_size++;
-    printf("pile[%d]: %d of %s\n", curr_game->pile_size, curr_game->pile[curr_game->pile_size].value, curr_game->pile[curr_game->pile_size].type);
-    remove_card(curr_game, i, val, split_card[1]);
+    curr_game->players[player_num].num_cards -= 1;
+
+    //remove card from player's hand
+    remove_card(curr_game, player_num, val, split_card[1]);
   }
 }
 
