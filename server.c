@@ -155,7 +155,6 @@ int main() {
 	  break;
 	}
       }
-      curr_val++;
       if (curr_val == 14) { curr_val = 1; }
       printf("Running turn of player %d\n", i);
       int num_played = run_turn(i, curr_game, connections[i]);
@@ -172,18 +171,28 @@ int main() {
 		  curr_val);
 	  
 	  //Send notification to clients that it is time to BS
+	  int got;
 	  while(1) {
 	    write(connections[p], msg, sizeof(msg));
 	    printf("Sent client [%d] %s\n", p,msg);
+	    
 	    read(connections[p], msg, 75);
-	    if (strcmp(b, "ok") == 0) {//or whatever indicator you choose
-	      printf("Got the ok\n");
+	    got = (int)strtol(msg, (char**)NULL, 10);
+	    if (got==2) {//or whatever indicator you choose
+	      printf("Accuse was correct!\n");
+	      break;
+	    } else if (got) {
+	      printf("Accuse was wrong\n");
+	      break;
+	    } else {
+	      printf("No accuse was taken\n");
 	      break;
 	    }
 	  }
 	  run_BSing(connections[p], curr_game, p, i);
 	}
       }
+      curr_val++;
     }
   }
   free(deck);

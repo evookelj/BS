@@ -56,7 +56,7 @@ int main( int argc, char *argv[] ) {
     }
     if(buffer[0] == 'b') {
       printf("Got the BS\n");
-      char** args = split(buffer, ",", &placeh, 0);
+      char** args = split(buffer, ",", &placeh, 1);
       int i;
       for (i=0; i<placeh; i++) {
 	printf("Recieved[%d]: %s\n",i,args[i]);
@@ -67,6 +67,7 @@ int main( int argc, char *argv[] ) {
       char res[2];
       sprintf(res, "%d", result);
       write(sd, res, sizeof(res));
+      printf("Sending accuse result..\n");
     }
   }
 

@@ -299,12 +299,12 @@ int run_human_accuse(char* this_player, char* last_player, int num_cards_from_tu
     fgets(input, sizeof(input), stdin);
     if (is_bs) {
       printf("You were correct! %s now has to take the pile.\n", last_player);
-      return 1;
+      return 2;
     } else {
       printf("You were wrong :( and now have to take the pile.\n");
-      return 0;
+      return 1;
     }
   } 
   printf("Okay, moving on then...\n");
-  return 2;
+  return 0;
 }
