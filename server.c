@@ -132,6 +132,7 @@ int main() {
   int player_count;
   int p;
   int curr_val = 1;
+  char b[100];
   while (1) {
     for(i = 0; i < num_players; i++) {
       for (p=0; p<num_players; p++) {
@@ -146,8 +147,14 @@ int main() {
       char curr[3];
       sprintf(curr, "%d", curr_val);
       char* msg = curr;
-      write(connections[i], msg, 8);
-      printf("Sent client [%d] '%s' \n", i, msg);
+      while(1) {
+	write(connections[i], msg, 8);
+	printf("Sent client [%d] '%s' \n", i, msg);
+	read(connections[i], b, 4);
+	if(b[0] == 'g') {
+	  break;
+	}
+      }
       curr_val++;
       if (curr_val == 14) { curr_val = 1; }
       printf("Running turn of player %d\n", i);

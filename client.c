@@ -72,6 +72,7 @@ void run_human_turn_client(int curr_val, int sd) {
   char buffer[17*200];
   int rd;
   while (1) {
+    write(sd, "got", 4);
     printf("READING FOR CARDS...\n");
     rd = read(sd, buffer, 17*200);
     if (buffer[0] == 'd') {//used so prog knows cards sending
